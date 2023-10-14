@@ -28,12 +28,13 @@ BOT.message(contains: PIXIV_REGEX) do |event|
 end
 
 BOT.message(contains: TWITTER_REGEX) do |event|
-  old_link = event.message.to_s.match(TWITTER_REGEX).to_s
-  new_link = replace_domain(
-    old_link,
-    'twitter',
-    'vxtwitter'
-  )
+  results = event.message.to_s.match(TWITTER_REGEX)
+  new_link = case results[:domain]
+             when 'x.com'
+               replace_domain(results.to_s, 'x.com', 'vxtwitter.com')
+             when 'twitter.com'
+               replace_domain(results.to_s, 'twitter.com', 'vxtwitter.com')
+             end
   LOGGER.info(service: 'twitter', user: event.message.author.display_name, link: old_link, new_link: new_link)
   event.respond(new_link, false, nil, nil, nil, event.message)
   event.message.suppress_embeds
