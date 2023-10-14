@@ -17,7 +17,19 @@ You can invite the bot to your server by using [this link](https://discord.com/a
 
 There are 0 guarantees made about the bot working at all times. I maintain the server for my own purposes and if the bot dies then it's dead until I restart it.
 
-### Manual installed
+Alternatively, you can self-host the bot. To do this, you need an application with a bot. Follow the [Discord Developer docs](https://discord.com/developers/docs/getting-started) to set things up.
+
+The permissions needed by the bot are:
+
+* Read Messages/View channels
+* Send Messages
+* Send Messages in Threads
+* Manage Messages
+* Embed Links
+
+If I missed something, or some permissions are not necessary then please let me know.
+
+### Manual install
 
 0. You need Ruby 2.7 or later
 1. Clone this repository
