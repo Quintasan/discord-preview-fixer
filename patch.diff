@@ -1,0 +1,13 @@
+diff --git a/README.md b/README.md
+index 6554634..02f750c 100644
+--- a/README.md
++++ b/README.md
+@@ -6,6 +6,8 @@ This is a simple Discord bot that scans messaages for links to Pixiv/Twitter, re
+ |----------|---------------|----------------------------------|
+ | Twtitter | vxtwitter.com | Will convert x.com links as well |
+ | Pixiv    | phixiv.net    |                                  |
++| Tiktok   | vxtiktok.com  |                                  |
++| Reddit   | rxddit.com    |                                  |
+ 
+ ## How to use
+ 
