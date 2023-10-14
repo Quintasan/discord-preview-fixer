@@ -9,6 +9,14 @@ This is a simple Discord bot that scans messaages for links to Pixiv/Twitter, re
 
 ## How to use
 
+### Public instance
+
+Ideally, first create a role for the bot, then add that role to channels you want the bot to handle.
+
+You can invite the bot to your server by using [this link](https://discord.com/api/oauth2/authorize?client_id=1162716486020890634&permissions=377957149696&scope=bot). Once the bot has joined, assign it the role you created.
+
+There are 0 guarantees made about the bot working at all times. I maintain the server for my own purposes and if the bot dies then it's dead until I restart it.
+
 ### Manual installed
 
 0. You need Ruby 2.7 or later
