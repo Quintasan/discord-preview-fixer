@@ -10,9 +10,22 @@ PIXIV_REGEX = %r{https?://(?<www>www.)?(?<domain>pixiv.net)/\S+/artworks/\d+}i
 TWITTER_REGEX = %r{https?://(?<www>www.)?(?<domain>twitter.com|x.com)/(?<username>\S+)/status/(?<post_id>\d+)}i
 REDDIT_REGEX = %r{https?://(www.|old.)?(?<domain>reddit.com)(?<rest>/\S*)}i
 TIKTOK_REGEX = %r{https?://(www.|vm.)?(?<domain>tiktok.com)(?<rest>/\S*)}i
+AMIAMI_REGEX = %r{https?://(?<domain>www.amiami.com)(?<rest>/\S*)}i
 
 def replace_domain(link, original_domain, new_domain)
   link.gsub(original_domain, new_domain)
+end
+
+BOT.message(contains: AMIAMI_REGEX) do |event|
+  old_link = event.message.to_s.match(AMIAMI_REGEX).to_s
+  new_link = replace_domain(
+    old_link,
+    'www.amiami.com',
+    'figurki.harvestasha.org'
+  )
+  LOGGER.info(service: 'amiami', user: event.message.author.display_name, link: old_link, new_link: new_link)
+  event.respond(new_link, false, nil, nil, nil, event.message)
+  event.message.suppress_embeds
 end
 
 BOT.message(contains: PIXIV_REGEX) do |event|
