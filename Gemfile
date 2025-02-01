@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-ruby '3.2.2'
+ruby '3.3.7'
 
 gem 'discordrb', git: 'https://github.com/Quintasan/discordrb.git', branch: '223-support-setting-message-flags'
 gem 'dotenv', require: 'dotenv/load'
