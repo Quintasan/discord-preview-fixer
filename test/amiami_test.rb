@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-require 'amiami'
+require_relative 'test_helper'
 
 class AmiAmiTest < Minitest::Test
-  Event = Struct.new(:message)
-
   def setup
     @figure_link = Event.new(message: 'https://www.amiami.com/eng/detail/?gcode=FIGURE-181922')
   end

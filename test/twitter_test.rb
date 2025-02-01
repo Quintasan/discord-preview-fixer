@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'twitter'
+require_relative 'test_helper'
 
 class TwitterTest < Minitest::Test
   Event = Struct.new(:message)

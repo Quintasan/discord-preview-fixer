@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-require 'pixiv'
+require_relative 'test_helper'
 
 class TestPixiv < Minitest::Test
-  Event = Struct.new(:message)
-
   def setup
     @with_locale = Event.new(message: 'https://www.pixiv.net/en/artworks/126308933')
     @without_locale = Event.new(message: 'https://www.pixiv.net/artworks/126308933')
