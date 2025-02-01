@@ -1,5 +1,12 @@
+require:
+  - rubocop-minitest
+  - rubocop-rake
+
 AllCops:
   NewCops: enable
 
 Style/HashSyntax:
   EnforcedShorthandSyntax: consistent
+
+Style/Documentation:
+  Enabled: false
