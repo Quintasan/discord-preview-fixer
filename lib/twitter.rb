@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Twitter
   REGEX = %r{https?://(?<www>www.)?(?<domain>twitter.com|x.com)/(?<username>\S+)/status/(?<post_id>\d+)}i
 

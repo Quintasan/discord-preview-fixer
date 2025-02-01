@@ -7,8 +7,8 @@ require_relative 'lib/amiami'
 Bundler.require(:default)
 BOT = Discordrb::Bot.new(token: ENV.fetch('DISCORD_PREVIEW_FIXER_TOKEN'))
 LOGGER = TTY::Logger.new
-REDDIT_REGEX = %r{https?://(www.|old.)?(?<domain>reddit.com)(?<rest>/\S*)}i
-TIKTOK_REGEX = %r{https?://(www.|vm.)?(?<domain>tiktok.com)(?<rest>/\S*)}i
+REDDIT_REGEX = %r{https?://(?<subdomain>www.|old.)?(?<tld>reddit.com)(?<rest>/\S*)}i
+TIKTOK_REGEX = %r{https?://(?<subdomain>www.|vm.)?(?<tld>tiktok.com)(?<rest>/\S*)}i
 
 BOT.message(contains: AmiAmi::REGEX) do |event|
   fixed_link = AmiAmi.fix_link(event)

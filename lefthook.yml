@@ -1,0 +1,5 @@
+pre-commit:
+  commands:
+    lint:
+      glob: "*.rb"
+      run: bundle exec rubocop --force-exclusion {all_files}

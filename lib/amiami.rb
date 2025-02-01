@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module AmiAmi
   REGEX = %r{https?://(?<domain>www.amiami.com)(?<rest>/\S*)}i
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Pixiv
   REGEX = %r{https?://(?<www>www.)?(?<domain>pixiv.net)/(?<lang>\S+/)?artworks/\d+}
 

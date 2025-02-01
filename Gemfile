@@ -9,6 +9,11 @@ gem 'dotenv', require: 'dotenv/load'
 gem 'tty-logger'
 
 group :development do
+  gem 'lefthook'
+  gem 'minitest'
   gem 'pry-byebug'
-  gem 'rubocop'
+  gem 'rake'
+  gem 'rubocop', require: false
+  gem 'rubocop-minitest', require: false
+  gem 'rubocop-rake', require: false
 end
