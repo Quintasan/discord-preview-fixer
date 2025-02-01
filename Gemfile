@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 
 ruby '3.3.7'
 
-gem 'discordrb', git: 'https://github.com/Quintasan/discordrb.git', branch: '223-support-setting-message-flags'
+gem 'discordrb', github: 'shardlab/discordrb'
 gem 'dotenv', require: 'dotenv/load'
 gem 'tty-logger'
 
