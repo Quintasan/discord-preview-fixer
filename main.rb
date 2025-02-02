@@ -32,7 +32,7 @@ BOT.message(contains: Twitter::REGEX) do |event|
   event.message.suppress_embeds
 end
 
-BOT.message(contains: REDDIT_REGEX) do |event|
+BOT.message(contains: Reddit::REGEX) do |event|
   fixed_link = TikTok.fix_link(event)
   LOGGER.info(service: 'reddit', user: event.message.author.display_name, fixed_link: fixed_link)
   event.respond(new_link, false, nil, nil, nil, event.message)
