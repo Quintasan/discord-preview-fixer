@@ -14,4 +14,4 @@ RUN addgroup app && \
     adduser app --home /app --shell /bin/bash --ingroup app --disabled-password && \
     chown -R app:app /app
 USER app
-CMD ["ruby", "main.rb"]
+CMD ["bundle", "exec", "ruby", "main.rb"]
