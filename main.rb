@@ -17,8 +17,9 @@ BOT.message(contains: AmiAmi::REGEX) do |event|
   response = event.respond(fixed_link, false, nil, nil, nil, event.message)
   event.message.suppress_embeds
 
-  BOT.add_await(:"delete_#{event.message.id}", Discordrb::Events::MessageDeleteEvent) do |_delete_event|
-    response.delete
+  BOT.add_await!(Discordrb::Events::MessageDeleteEvent, timeout: 30) do |delete_event|
+    LOGGER.info(service: 'amiami', event: 'message_delete', original_message_id: delete_event.id)
+    response.delete if event.message.id == delete_event.id
   end
 end
 
@@ -28,8 +29,9 @@ BOT.message(contains: Pixiv::REGEX) do |event|
   response = event.respond(fixed_link, false, nil, nil, nil, event.message)
   event.message.suppress_embeds
 
-  BOT.add_await(:"delete_#{event.message.id}", Discordrb::Events::MessageDeleteEvent) do |_delete_event|
-    response.delete
+  BOT.add_await!(Discordrb::Events::MessageDeleteEvent, timeout: 30) do |delete_event|
+    LOGGER.info(service: 'pixiv', event: 'message_delete', original_message_id: delete_event.id)
+    response.delete if event.message.id == delete_event.id
   end
 end
 
@@ -39,8 +41,9 @@ BOT.message(contains: Twitter::REGEX) do |event|
   response = event.respond(fixed_link, false, nil, nil, nil, event.message)
   event.message.suppress_embeds
 
-  BOT.add_await(:"delete_#{event.message.id}", Discordrb::Events::MessageDeleteEvent) do |_delete_event|
-    response.delete
+  BOT.add_await!(Discordrb::Events::MessageDeleteEvent, timeout: 30) do |delete_event|
+    LOGGER.info(service: 'twitter', event: 'message_delete', original_message_id: delete_event.id)
+    response.delete if event.message.id == delete_event.id
   end
 end
 
@@ -50,8 +53,9 @@ BOT.message(contains: Reddit::REGEX) do |event|
   response = event.respond(new_link, false, nil, nil, nil, event.message)
   event.message.suppress_embeds
 
-  BOT.add_await(:"delete_#{event.message.id}", Discordrb::Events::MessageDeleteEvent) do |_delete_event|
-    response.delete
+  BOT.add_await!(Discordrb::Events::MessageDeleteEvent, timeout: 30) do |delete_event|
+    LOGGER.info(service: 'reddit', event: 'message_delete', original_message_id: delete_event.id)
+    response.delete if event.message.id == delete_event.id
   end
 end
 
@@ -61,8 +65,9 @@ BOT.message(contains: TikTok::REGEX) do |event|
   response = event.respond(fixed_link, false, nil, nil, nil, event.message)
   event.message.suppress_embeds
 
-  BOT.add_await(:"delete_#{event.message.id}", Discordrb::Events::MessageDeleteEvent) do |_delete_event|
-    response.delete
+  BOT.add_await!(Discordrb::Events::MessageDeleteEvent, timeout: 30) do |delete_event|
+    LOGGER.info(service: 'tiktok', event: 'message_delete', original_message_id: delete_event.id)
+    response.delete if event.message.id == delete_event.id
   end
 end
 
