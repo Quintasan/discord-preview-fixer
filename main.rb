@@ -17,7 +17,7 @@ BOT.message(contains: AmiAmi::REGEX) do |event|
   response = event.respond(fixed_link, false, nil, nil, nil, event.message)
   event.message.suppress_embeds
 
-  BOT.add_await(:"delete_#{event.message.id}", Discordrb::Events::MessageDeleteEvent) do |delete_event|
+  BOT.add_await(:"delete_#{event.message.id}", Discordrb::Events::MessageDeleteEvent) do |_delete_event|
     response.delete
   end
 end
@@ -28,7 +28,7 @@ BOT.message(contains: Pixiv::REGEX) do |event|
   response = event.respond(fixed_link, false, nil, nil, nil, event.message)
   event.message.suppress_embeds
 
-  BOT.add_await(:"delete_#{event.message.id}", Discordrb::Events::MessageDeleteEvent) do |delete_event|
+  BOT.add_await(:"delete_#{event.message.id}", Discordrb::Events::MessageDeleteEvent) do |_delete_event|
     response.delete
   end
 end
@@ -39,7 +39,7 @@ BOT.message(contains: Twitter::REGEX) do |event|
   response = event.respond(fixed_link, false, nil, nil, nil, event.message)
   event.message.suppress_embeds
 
-  BOT.add_await(:"delete_#{event.message.id}", Discordrb::Events::MessageDeleteEvent) do |delete_event|
+  BOT.add_await(:"delete_#{event.message.id}", Discordrb::Events::MessageDeleteEvent) do |_delete_event|
     response.delete
   end
 end
@@ -50,7 +50,7 @@ BOT.message(contains: Reddit::REGEX) do |event|
   response = event.respond(new_link, false, nil, nil, nil, event.message)
   event.message.suppress_embeds
 
-  BOT.add_await(:"delete_#{event.message.id}", Discordrb::Events::MessageDeleteEvent) do |delete_event|
+  BOT.add_await(:"delete_#{event.message.id}", Discordrb::Events::MessageDeleteEvent) do |_delete_event|
     response.delete
   end
 end
@@ -61,7 +61,7 @@ BOT.message(contains: TikTok::REGEX) do |event|
   response = event.respond(fixed_link, false, nil, nil, nil, event.message)
   event.message.suppress_embeds
 
-  BOT.add_await(:"delete_#{event.message.id}", Discordrb::Events::MessageDeleteEvent) do |delete_event|
+  BOT.add_await(:"delete_#{event.message.id}", Discordrb::Events::MessageDeleteEvent) do |_delete_event|
     response.delete
   end
 end
