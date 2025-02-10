@@ -14,36 +14,56 @@ LOGGER = TTY::Logger.new
 BOT.message(contains: AmiAmi::REGEX) do |event|
   fixed_link = AmiAmi.fix_link(event)
   LOGGER.info(service: 'amiami', user: event.message.author.display_name, fixed_link: fixed_link)
-  event.respond(fixed_link, false, nil, nil, nil, event.message)
+  response = event.respond(fixed_link, false, nil, nil, nil, event.message)
   event.message.suppress_embeds
+
+  BOT.add_await(:"delete_#{event.message.id}", Discordrb::Events::MessageDeleteEvent) do |delete_event|
+    response.delete
+  end
 end
 
 BOT.message(contains: Pixiv::REGEX) do |event|
   fixed_link = Pixiv.fix_link(event)
   LOGGER.info(service: 'pixiv', user: event.message.author.display_name, fixed_link: fixed_link)
-  event.respond(fixed_link, false, nil, nil, nil, event.message)
+  response = event.respond(fixed_link, false, nil, nil, nil, event.message)
   event.message.suppress_embeds
+
+  BOT.add_await(:"delete_#{event.message.id}", Discordrb::Events::MessageDeleteEvent) do |delete_event|
+    response.delete
+  end
 end
 
 BOT.message(contains: Twitter::REGEX) do |event|
   fixed_link = Twitter.fix_link(event)
   LOGGER.info(service: 'twitter', user: event.message.author.display_name, fixed_link: fixed_link)
-  event.respond(fixed_link, false, nil, nil, nil, event.message)
+  response = event.respond(fixed_link, false, nil, nil, nil, event.message)
   event.message.suppress_embeds
+
+  BOT.add_await(:"delete_#{event.message.id}", Discordrb::Events::MessageDeleteEvent) do |delete_event|
+    response.delete
+  end
 end
 
 BOT.message(contains: Reddit::REGEX) do |event|
   fixed_link = TikTok.fix_link(event)
   LOGGER.info(service: 'reddit', user: event.message.author.display_name, fixed_link: fixed_link)
-  event.respond(new_link, false, nil, nil, nil, event.message)
+  response = event.respond(new_link, false, nil, nil, nil, event.message)
   event.message.suppress_embeds
+
+  BOT.add_await(:"delete_#{event.message.id}", Discordrb::Events::MessageDeleteEvent) do |delete_event|
+    response.delete
+  end
 end
 
 BOT.message(contains: TikTok::REGEX) do |event|
   fixed_link = TikTok.fix_link(event)
   LOGGER.info(service: 'tiktok', user: event.message.author.display_name, fixed_link: fixed_link)
-  event.respond(fixed_link, false, nil, nil, nil, event.message)
+  response = event.respond(fixed_link, false, nil, nil, nil, event.message)
   event.message.suppress_embeds
+
+  BOT.add_await(:"delete_#{event.message.id}", Discordrb::Events::MessageDeleteEvent) do |delete_event|
+    response.delete
+  end
 end
 
 LOGGER.info { "Started Discord Link Expander at #{Time.now.strftime('%Y-%m-%d-%H:%M:%S')}" }
