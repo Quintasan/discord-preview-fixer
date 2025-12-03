@@ -14,7 +14,12 @@ LOGGER = TTY::Logger.new
 BOT.message(contains: AmiAmi::REGEX) do |event|
   fixed_link = AmiAmi.fix_link(event)
   LOGGER.info(service: 'amiami', user: event.message.author.display_name, fixed_link: fixed_link)
-  response = event.respond(fixed_link, false, nil, nil, nil, event.message)
+  reply_text = if event.message.to_s.match(/\|\|.*\|\|/)
+                 "||#{fixed_link}||"
+               else
+                 fixed_link
+               end
+  response = event.respond(reply_text, false, nil, nil, nil, event.message)
   event.message.suppress_embeds
 
   BOT.add_await!(Discordrb::Events::MessageDeleteEvent, timeout: 30) do |delete_event|
@@ -26,7 +31,12 @@ end
 BOT.message(contains: Pixiv::REGEX) do |event|
   fixed_link = Pixiv.fix_link(event)
   LOGGER.info(service: 'pixiv', user: event.message.author.display_name, fixed_link: fixed_link)
-  response = event.respond(fixed_link, false, nil, nil, nil, event.message)
+  reply_text = if event.message.to_s.match(/\|\|.*\|\|/)
+                 "||#{fixed_link}||"
+               else
+                 fixed_link
+               end
+  response = event.respond(reply_text, false, nil, nil, nil, event.message)
   event.message.suppress_embeds
 
   BOT.add_await!(Discordrb::Events::MessageDeleteEvent, timeout: 30) do |delete_event|
@@ -38,7 +48,12 @@ end
 BOT.message(contains: Twitter::REGEX) do |event|
   fixed_link = Twitter.fix_link(event)
   LOGGER.info(service: 'twitter', user: event.message.author.display_name, fixed_link: fixed_link)
-  response = event.respond(fixed_link, false, nil, nil, nil, event.message)
+  reply_text = if event.message.to_s.match(/\|\|.*\|\|/)
+                 "||#{fixed_link}||"
+               else
+                 fixed_link
+               end
+  response = event.respond(reply_text, false, nil, nil, nil, event.message)
   event.message.suppress_embeds
 
   BOT.add_await!(Discordrb::Events::MessageDeleteEvent, timeout: 30) do |delete_event|
@@ -50,7 +65,12 @@ end
 BOT.message(contains: Reddit::REGEX) do |event|
   fixed_link = Reddit.fix_link(event)
   LOGGER.info(service: 'reddit', user: event.message.author.display_name, fixed_link: fixed_link)
-  response = event.respond(fixed_link, false, nil, nil, nil, event.message)
+  reply_text = if event.message.to_s.match(/\|\|.*\|\|/)
+                 "||#{fixed_link}||"
+               else
+                 fixed_link
+               end
+  response = event.respond(reply_text, false, nil, nil, nil, event.message)
   event.message.suppress_embeds
 
   BOT.add_await!(Discordrb::Events::MessageDeleteEvent, timeout: 30) do |delete_event|
@@ -62,7 +82,12 @@ end
 BOT.message(contains: TikTok::REGEX) do |event|
   fixed_link = TikTok.fix_link(event)
   LOGGER.info(service: 'tiktok', user: event.message.author.display_name, fixed_link: fixed_link)
-  response = event.respond(fixed_link, false, nil, nil, nil, event.message)
+  reply_text = if event.message.to_s.match(/\|\|.*\|\|/)
+                 "||#{fixed_link}||"
+               else
+                 fixed_link
+               end
+  response = event.respond(reply_text, false, nil, nil, nil, event.message)
   event.message.suppress_embeds
 
   BOT.add_await!(Discordrb::Events::MessageDeleteEvent, timeout: 30) do |delete_event|
