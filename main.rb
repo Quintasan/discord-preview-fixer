@@ -48,9 +48,9 @@ BOT.message(contains: Twitter::REGEX) do |event|
 end
 
 BOT.message(contains: Reddit::REGEX) do |event|
-  fixed_link = TikTok.fix_link(event)
+  fixed_link = Reddit.fix_link(event)
   LOGGER.info(service: 'reddit', user: event.message.author.display_name, fixed_link: fixed_link)
-  response = event.respond(new_link, false, nil, nil, nil, event.message)
+  response = event.respond(fixed_link, false, nil, nil, nil, event.message)
   event.message.suppress_embeds
 
   BOT.add_await!(Discordrb::Events::MessageDeleteEvent, timeout: 30) do |delete_event|
