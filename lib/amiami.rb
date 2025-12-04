@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
-module AmiAmi
-  REGEX = %r{https?://(?<domain>www.amiami.com)(?<rest>/\S*)}i
+require_relative 'service'
 
-  def self.fix_link(event)
-    message = event.message.to_s
-    old_link = message.match(REGEX).to_s
-    old_link.gsub('www.amiami.com', 'figurki.harvestasha.org')
+class AmiAmi < Service
+  HOST_REGEX = /^(www.)?amiami.com$/i
+
+  def self.fix_link(uri)
+    return unless uri.host.match?(HOST_REGEX)
+
+    uri.host = 'figurki.harvestasha.org'
+    uri.to_s
   end
 end
