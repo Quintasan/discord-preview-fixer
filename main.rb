@@ -14,8 +14,6 @@ LOGGER = TTY::Logger.new
 URI_REGEX = URI::DEFAULT_PARSER.make_regexp
 
 BOT.message(contains: URI_REGEX) do |event|
-  next unless event.server.id == 691_315_598_474_477_612
-
   message = event.message.to_s
 
   uri_in_message = message.match(URI_REGEX).to_s
