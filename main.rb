@@ -28,7 +28,7 @@ BOT.message(contains: URI_REGEX) do |event|
   LOGGER.info(user: event.message.author.display_name, fixed_link: fixed_link)
 
   event.message.suppress_embeds
-  response = event.respond(fixed_link, false, nil, nil, nil, event.message)
+  response = event.respond(fixed_link, false, nil, nil, false, event.message)
 
   BOT.add_await!(Discordrb::Events::MessageDeleteEvent, timeout: 30) do |delete_event|
     LOGGER.info(event: 'message_delete', original_message_id: delete_event.id)
