@@ -4,5 +4,5 @@ require 'amiami'
 require 'pixiv'
 require 'reddit'
 require 'twitter'
-require 'tiktok'
-Event = Struct.new(:message)
+require 'instagram'
+require 'uri'

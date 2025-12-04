@@ -4,19 +4,19 @@ require_relative 'test_helper'
 
 class TestPixiv < Minitest::Test
   def setup
-    @with_locale = Event.new(message: 'https://www.pixiv.net/en/artworks/126308933')
-    @without_locale = Event.new(message: 'https://www.pixiv.net/artworks/126308933')
-    @without_www = Event.new(message: 'https://pixiv.net/en/artworks/126308933')
+    @with_locale = URI.parse('https://www.pixiv.net/en/artworks/126308933')
+    @without_locale = URI.parse('https://www.pixiv.net/artworks/126308933')
+    @without_www = URI.parse('https://pixiv.net/en/artworks/126308933')
   end
 
   def test_link_with_locale
-    expected = 'https://www.phixiv.net/en/artworks/126308933'
+    expected = 'https://phixiv.net/en/artworks/126308933'
 
     assert_equal expected, Pixiv.fix_link(@with_locale)
   end
 
   def test_link_without_locale
-    expected = 'https://www.phixiv.net/artworks/126308933'
+    expected = 'https://phixiv.net/artworks/126308933'
 
     assert_equal expected, Pixiv.fix_link(@without_locale)
   end

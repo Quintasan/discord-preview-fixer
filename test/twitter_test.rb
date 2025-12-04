@@ -3,11 +3,9 @@
 require_relative 'test_helper'
 
 class TwitterTest < Minitest::Test
-  Event = Struct.new(:message)
-
   def setup
-    @twitter_link = Event.new(message: 'https://twitter.com/cutesexyrobutts/status/1674537984614432768')
-    @xcom_link = Event.new(message: 'https://x.com/cutesexyrobutts/status/1674537984614432768')
+    @twitter_link = URI.parse('https://twitter.com/cutesexyrobutts/status/1674537984614432768')
+    @xcom_link = URI.parse('https://x.com/cutesexyrobutts/status/1674537984614432768')
     @expected = 'https://vxtwitter.com/cutesexyrobutts/status/1674537984614432768'
   end
 
