@@ -6,7 +6,6 @@ require_relative 'lib/pixiv'
 require_relative 'lib/amiami'
 require_relative 'lib/twitter'
 require_relative 'lib/reddit'
-require_relative 'lib/tiktok'
 Bundler.require(:default)
 BOT = Discordrb::Bot.new(token: ENV.fetch('DISCORD_PREVIEW_FIXER_TOKEN'))
 LOGGER = TTY::Logger.new
