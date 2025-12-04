@@ -11,65 +11,33 @@ Bundler.require(:default)
 BOT = Discordrb::Bot.new(token: ENV.fetch('DISCORD_PREVIEW_FIXER_TOKEN'))
 LOGGER = TTY::Logger.new
 
-BOT.message(contains: AmiAmi::REGEX) do |event|
-  fixed_link = AmiAmi.fix_link(event)
-  LOGGER.info(service: 'amiami', user: event.message.author.display_name, fixed_link: fixed_link)
-  response = event.respond(fixed_link, false, nil, nil, nil, event.message)
+URI_REGEX = URI::DEFAULT_PARSER.make_regexp
+
+BOT.message(contains: URI_REGEX) do |event|
+  next unless event.server.id == 691_315_598_474_477_612
+
+  message = event.message.to_s
+
+  uri_in_message = message.match(URI_REGEX).to_s
+  uri = URI.parse(uri_in_message)
+
+  fixed_link = Service.subclasses.filter_map { |k| k.fix_link(uri) }.first
+
+  next unless fixed_link
+
+  fixed_link = "|| #{fixed_link} ||" if message.match?(/\|\|.*\|\|/)
+
+  LOGGER.info(user: event.message.author.display_name, fixed_link: fixed_link)
+
   event.message.suppress_embeds
+  response = event.respond(fixed_link, false, nil, nil, nil, event.message)
 
   BOT.add_await!(Discordrb::Events::MessageDeleteEvent, timeout: 30) do |delete_event|
-    LOGGER.info(service: 'amiami', event: 'message_delete', original_message_id: delete_event.id)
-    response.delete if event.message.id == delete_event.id
-  end
-end
-
-BOT.message(contains: Pixiv::REGEX) do |event|
-  fixed_link = Pixiv.fix_link(event)
-  LOGGER.info(service: 'pixiv', user: event.message.author.display_name, fixed_link: fixed_link)
-  response = event.respond(fixed_link, false, nil, nil, nil, event.message)
-  event.message.suppress_embeds
-
-  BOT.add_await!(Discordrb::Events::MessageDeleteEvent, timeout: 30) do |delete_event|
-    LOGGER.info(service: 'pixiv', event: 'message_delete', original_message_id: delete_event.id)
-    response.delete if event.message.id == delete_event.id
-  end
-end
-
-BOT.message(contains: Twitter::REGEX) do |event|
-  fixed_link = Twitter.fix_link(event)
-  LOGGER.info(service: 'twitter', user: event.message.author.display_name, fixed_link: fixed_link)
-  response = event.respond(fixed_link, false, nil, nil, nil, event.message)
-  event.message.suppress_embeds
-
-  BOT.add_await!(Discordrb::Events::MessageDeleteEvent, timeout: 30) do |delete_event|
-    LOGGER.info(service: 'twitter', event: 'message_delete', original_message_id: delete_event.id)
-    response.delete if event.message.id == delete_event.id
-  end
-end
-
-BOT.message(contains: Reddit::REGEX) do |event|
-  fixed_link = Reddit.fix_link(event)
-  LOGGER.info(service: 'reddit', user: event.message.author.display_name, fixed_link: fixed_link)
-  response = event.respond(fixed_link, false, nil, nil, nil, event.message)
-  event.message.suppress_embeds
-
-  BOT.add_await!(Discordrb::Events::MessageDeleteEvent, timeout: 30) do |delete_event|
-    LOGGER.info(service: 'reddit', event: 'message_delete', original_message_id: delete_event.id)
-    response.delete if event.message.id == delete_event.id
-  end
-end
-
-BOT.message(contains: TikTok::REGEX) do |event|
-  fixed_link = TikTok.fix_link(event)
-  LOGGER.info(service: 'tiktok', user: event.message.author.display_name, fixed_link: fixed_link)
-  response = event.respond(fixed_link, false, nil, nil, nil, event.message)
-  event.message.suppress_embeds
-
-  BOT.add_await!(Discordrb::Events::MessageDeleteEvent, timeout: 30) do |delete_event|
-    LOGGER.info(service: 'tiktok', event: 'message_delete', original_message_id: delete_event.id)
+    LOGGER.info(event: 'message_delete', original_message_id: delete_event.id)
     response.delete if event.message.id == delete_event.id
   end
 end
 
 LOGGER.info { "Started Discord Link Expander at #{Time.now.strftime('%Y-%m-%d-%H:%M:%S')}" }
+LOGGER.info { "Supported services: #{Service.subclasses.map(&:name).join(', ')}" }
 BOT.run

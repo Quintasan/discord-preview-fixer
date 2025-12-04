@@ -5,4 +5,4 @@ require 'pixiv'
 require 'reddit'
 require 'twitter'
 require 'tiktok'
-Event = Struct.new(:message)
+require 'uri'

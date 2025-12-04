@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
-module Pixiv
-  REGEX = %r{https?://(?<www>www.)?(?<domain>pixiv.net)/(?<lang>\S+/)?artworks/\d+}
+require_relative 'service'
 
-  def self.fix_link(event)
-    message = event.message.to_s
-    old_link = message.match(REGEX).to_s
-    old_link.gsub('pixiv', 'phixiv')
+class Pixiv < Service
+  HOST_REGEX = /(www.)?pixiv.net/i
+
+  def self.fix_link(uri)
+    return unless uri.host.match?(HOST_REGEX)
+
+    uri.host = 'phixiv.net'
+    uri.to_s
   end
 end

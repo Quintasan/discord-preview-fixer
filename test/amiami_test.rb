@@ -4,7 +4,7 @@ require_relative 'test_helper'
 
 class AmiAmiTest < Minitest::Test
   def setup
-    @figure_link = Event.new(message: 'https://www.amiami.com/eng/detail/?gcode=FIGURE-181922')
+    @figure_link = URI.parse('https://www.amiami.com/eng/detail/?gcode=FIGURE-181922')
   end
 
   def test_figure
