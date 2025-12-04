@@ -4,8 +4,8 @@ require_relative 'test_helper'
 
 class TikTokTest < Minitest::Test
   def setup
-    @tiktok_link = Event.new(message: 'https://vm.tiktok.com/ZNeoNf3yN/')
-    @expected = 'https://vm.vxtiktok.com/ZNeoNf3yN/'
+    @tiktok_link = URI.parse('https://vm.tiktok.com/ZNeoNf3yN/')
+    @expected = 'https://vxtiktok.com/ZNeoNf3yN/'
   end
 
   def test_tiktok_link
