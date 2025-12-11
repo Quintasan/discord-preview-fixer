@@ -11,12 +11,12 @@ Bundler.require(:default)
 BOT = Discordrb::Bot.new(token: ENV.fetch('DISCORD_PREVIEW_FIXER_TOKEN'))
 LOGGER = TTY::Logger.new
 
-URI_REGEX = URI::DEFAULT_PARSER.make_regexp
+HTTP_REGEX = URI::DEFAULT_PARSER.make_regexp(%w[http https])
 
 BOT.message(contains: URI_REGEX) do |event|
   message = event.message.to_s
 
-  uri_in_message = message.match(URI_REGEX).to_s
+  uri_in_message = message.match(HTTP_REGEX).to_s
   uri = URI.parse(uri_in_message)
 
   fixed_link = Service.subclasses.filter_map { |k| k.fix_link(uri) }.first
