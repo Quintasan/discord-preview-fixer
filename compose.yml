@@ -1,7 +1,7 @@
 version: '3'
 services:
   bot:
-    image: ghcr.io/quintasan/discord-preview-fixer:v1.3.2
+    image: ghcr.io/quintasan/discord-preview-fixer:v1.3.3
     build:
       context: .
       dockerfile: Dockerfile
