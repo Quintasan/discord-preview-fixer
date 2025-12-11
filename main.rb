@@ -13,7 +13,7 @@ LOGGER = TTY::Logger.new
 
 HTTP_REGEX = URI::DEFAULT_PARSER.make_regexp(%w[http https])
 
-BOT.message(contains: URI_REGEX) do |event|
+BOT.message(contains: HTTP_REGEX) do |event|
   message = event.message.to_s
 
   uri_in_message = message.match(HTTP_REGEX).to_s
