@@ -2,9 +2,9 @@
 
 source 'https://rubygems.org'
 
-ruby '3.4.1'
+ruby '3.4.7'
 
-gem 'discordrb', github: 'shardlab/discordrb'
+gem 'discordrb'
 gem 'dotenv', require: 'dotenv/load'
 gem 'sentry-ruby'
 gem 'tty-logger'
