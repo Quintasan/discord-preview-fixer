@@ -1,4 +1,4 @@
-FROM ruby:3.4.1-alpine as base
+FROM ruby:3.4.7-alpine as base
 WORKDIR /app
 ENV BUNDLE_WITHOUT=development BUNDLE_PATH=/app/vendor/bundle BUNDLE_BIN=/app/vendor/bundle/bin BUNDLE_DEPLOYMENT=1
 
