@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 require 'bundler/setup'
+require_relative 'lib/sentry'
 require_relative 'lib/pixiv'
 require_relative 'lib/amiami'
 require_relative 'lib/twitter'

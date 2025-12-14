@@ -6,6 +6,7 @@ ruby '3.4.1'
 
 gem 'discordrb', github: 'shardlab/discordrb'
 gem 'dotenv', require: 'dotenv/load'
+gem 'sentry-ruby'
 gem 'tty-logger'
 
 group :development do
