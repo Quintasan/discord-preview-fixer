@@ -1,10 +1,10 @@
-FROM ruby:4.0.0-alpine as base
+FROM ruby:4.0.0-alpine AS base
 WORKDIR /app
 ENV BUNDLE_WITHOUT=development BUNDLE_PATH=/app/vendor/bundle BUNDLE_BIN=/app/vendor/bundle/bin BUNDLE_DEPLOYMENT=1
 
 FROM base AS build
 COPY . .
-RUN apk add --no-cache git build-base ruby-dev && \
+RUN apk add --no-cache git build-base ruby-dev linux-headers && \
     bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git 
 
