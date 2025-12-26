@@ -1,11 +1,11 @@
 version: '3'
 services:
   bot:
-    image: ghcr.io/quintasan/discord-preview-fixer:v1.3.5
+    image: ghcr.io/quintasan/discord-preview-fixer:v1.3.6
     build:
       context: .
       dockerfile: Dockerfile
     environment:
-      SENTRY_RELEASE: v1.3.5
+      SENTRY_RELEASE: v1.3.6
     env_file: .env
     restart: unless-stopped
