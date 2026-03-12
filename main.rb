@@ -30,13 +30,13 @@ BOT.message(contains: HTTP_REGEX) do |event|
 
   fixed_link = "|| #{fixed_link} ||" if message.match?(/\|\|.*\|\|/)
 
-  LOGGER.info(user: event.message.author.display_name, fixed_link: fixed_link)
+  LOGGER.info('Fixed link', user: event.message.author.display_name, fixed_link: fixed_link)
 
   event.message.suppress_embeds
   response = event.respond(fixed_link, false, nil, nil, false, event.message)
 
   BOT.add_await!(Discordrb::Events::MessageDeleteEvent, timeout: 30) do |delete_event|
-    LOGGER.info(event: 'message_delete', original_message_id: delete_event.id)
+    LOGGER.info('Removed message with fixed link', event: 'message_delete', original_message_id: delete_event.id)
     response.delete if event.message.id == delete_event.id
   end
 end
