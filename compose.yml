@@ -6,6 +6,9 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
+      DISCORD_PREVIEW_FIXER_TOKEN:
+      SENTRY_DSN:
+      SENTRY_ENVIRONMENT:
       SENTRY_RELEASE: v1.3.6
-    env_file: .env
+      DISCORDRB_NONACL: true # makes it shut up about missign libsodium
     restart: unless-stopped

@@ -10,7 +10,11 @@ require_relative 'lib/reddit'
 require_relative 'lib/instagram'
 Bundler.require(:default)
 BOT = Discordrb::Bot.new(token: ENV.fetch('DISCORD_PREVIEW_FIXER_TOKEN'))
-LOGGER = TTY::Logger.new
+
+SemanticLogger.application = 'Discord Preview Fixer'
+SemanticLogger.environment = ENV.fetch('SENTRY_ENVIRONMENT', nil)
+SemanticLogger.add_appender(io: $stdout, formatter: :json)
+LOGGER = SemanticLogger['bot']
 
 HTTP_REGEX = URI::DEFAULT_PARSER.make_regexp(%w[http https])
 
@@ -37,6 +41,6 @@ BOT.message(contains: HTTP_REGEX) do |event|
   end
 end
 
-LOGGER.info { "Started Discord Link Expander at #{Time.now.strftime('%Y-%m-%d-%H:%M:%S')}" }
-LOGGER.info { "Supported services: #{Service.subclasses.map(&:name).join(', ')}" }
+LOGGER.info('Starting Discord Link Expander')
+LOGGER.info('Supported services', services: Service.subclasses.map(&:name))
 BOT.run

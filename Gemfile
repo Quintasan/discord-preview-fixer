@@ -6,8 +6,8 @@ ruby '4.0.0'
 
 gem 'discordrb'
 gem 'dotenv', require: 'dotenv/load'
+gem 'semantic_logger'
 gem 'sentry-ruby'
-gem 'tty-logger'
 
 group :development do
   gem 'lefthook'
