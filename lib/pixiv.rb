@@ -3,7 +3,7 @@
 require_relative 'service'
 
 class Pixiv < Service
-  HOST_REGEX = /(www.)?pixiv.net/i
+  HOST_REGEX = /\A(www\.)?pixiv\.net\z/i
 
   def self.fix_link(uri)
     return unless uri.host.match?(HOST_REGEX)

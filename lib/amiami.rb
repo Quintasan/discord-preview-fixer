@@ -3,7 +3,7 @@
 require_relative 'service'
 
 class AmiAmi < Service
-  HOST_REGEX = /^(www.)?amiami.com$/i
+  HOST_REGEX = /\A(www\.)?amiami\.com\z/i
 
   def self.fix_link(uri)
     return unless uri.host.match?(HOST_REGEX)
