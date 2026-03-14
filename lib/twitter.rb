@@ -3,12 +3,6 @@
 require_relative 'service'
 
 class Twitter < Service
-  HOST_REGEX = /^(www.)?(twitter.com|x.com)$/i
-
-  def self.fix_link(uri)
-    return unless uri.host.match?(HOST_REGEX)
-
-    uri.host = 'vxtwitter.com'
-    uri.to_s
-  end
+  HOST_REGEX = /\A(www\.)?(twitter\.com|x\.com)\z/i
+  REPLACEMENT_HOST = 'vxtwitter.com'
 end
