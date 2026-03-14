@@ -24,7 +24,7 @@ BOT.message(contains: HTTP_REGEX) do |event|
   uri_in_message = message.match(HTTP_REGEX).to_s
   uri = URI.parse(uri_in_message)
 
-  fixed_link = Service.subclasses.filter_map { |k| k.fix_link(uri) }.first
+  fixed_link = Service.subclasses.lazy.filter_map { |k| k.fix_link(uri) }.first
 
   next unless fixed_link
 

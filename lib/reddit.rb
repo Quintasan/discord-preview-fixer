@@ -8,6 +8,7 @@ class Reddit < Service
   def self.fix_link(uri)
     return unless uri.host.match?(HOST_REGEX)
 
+    uri = uri.dup
     uri.host = 'rxddit.com'
     uri.to_s
   end

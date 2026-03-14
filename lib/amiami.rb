@@ -8,6 +8,7 @@ class AmiAmi < Service
   def self.fix_link(uri)
     return unless uri.host.match?(HOST_REGEX)
 
+    uri = uri.dup
     uri.host = 'figurki.harvestasha.org'
     uri.to_s
   end
