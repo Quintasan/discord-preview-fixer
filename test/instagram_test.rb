@@ -2,7 +2,7 @@
 
 require_relative 'test_helper'
 
-class TestInstagram < Minitest::Test
+class InstagramTest < Minitest::Test
   def setup
     @link = URI.parse('https://www.instagram.com/reel/DRdnbpqkih8/?utm_source=ig_web_copy_link&igsh=NTc4MTIwNjQ2YQ==')
   end
