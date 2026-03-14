@@ -19,7 +19,7 @@ LOGGER = SemanticLogger['bot']
 HTTP_REGEX = URI::DEFAULT_PARSER.make_regexp(%w[http https])
 
 BOT.message(contains: HTTP_REGEX) do |event|
-  message = event.message.to_s
+  message = event.message.content
 
   uri_in_message = message.match(HTTP_REGEX).to_s
   uri = URI.parse(uri_in_message)
