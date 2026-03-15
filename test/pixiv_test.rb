@@ -2,7 +2,7 @@
 
 require_relative 'test_helper'
 
-class TestPixiv < Minitest::Test
+class PixivTest < Minitest::Test
   def setup
     @with_locale = URI.parse('https://www.pixiv.net/en/artworks/126308933')
     @without_locale = URI.parse('https://www.pixiv.net/artworks/126308933')
