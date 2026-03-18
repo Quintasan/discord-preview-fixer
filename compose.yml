@@ -11,4 +11,10 @@ services:
       SENTRY_ENVIRONMENT:
       SENTRY_RELEASE: v1.3.8
       DISCORDRB_NONACL: true # makes it shut up about missign libsodium
+      DB_PATH: /app/db/messages.db
+    volumes:
+      - db:/app/db
     restart: unless-stopped
+
+volumes:
+  db:

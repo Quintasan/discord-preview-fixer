@@ -8,6 +8,7 @@ require_relative 'lib/amiami'
 require_relative 'lib/twitter'
 require_relative 'lib/reddit'
 require_relative 'lib/instagram'
+require_relative 'lib/message'
 Bundler.require(:default)
 BOT = Discordrb::Bot.new(token: ENV.fetch('DISCORD_PREVIEW_FIXER_TOKEN'))
 
@@ -35,9 +36,20 @@ BOT.message(contains: HTTP_REGEX) do |event|
   event.message.suppress_embeds
   response = event.respond(fixed_link, false, nil, nil, false, event.message)
 
-  BOT.add_await!(Discordrb::Events::MessageDeleteEvent, timeout: 30) do |delete_event|
-    LOGGER.info('Removed message with fixed link', event: 'message_delete', original_message_id: delete_event.id)
-    response.delete if event.message.id == delete_event.id
+  Message.create(original_message_id: event.message.id, fixed_message_id: response.id)
+end
+
+BOT.message_delete do |event|
+  record = Message.first(original_message_id: event.id)
+  next unless record
+
+  LOGGER.info('Removed message with fixed link', event: 'message_delete', original_message_id: event.id)
+  begin
+    event.channel.delete_message(record.fixed_message_id)
+  rescue StandardError => e
+    LOGGER.error('Failed to delete fixed link message', error: e.message)
+  ensure
+    record.destroy
   end
 end
 

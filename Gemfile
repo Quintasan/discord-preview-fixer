@@ -8,6 +8,8 @@ gem 'discordrb'
 gem 'dotenv', require: 'dotenv/load'
 gem 'semantic_logger'
 gem 'sentry-ruby'
+gem 'sequel'
+gem 'sqlite3'
 
 group :development do
   gem 'lefthook'

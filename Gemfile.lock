@@ -104,6 +104,10 @@ GEM
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
       logger
+    sequel (5.102.0)
+      bigdecimal
+    sqlite3 (2.9.2-x86_64-linux-gnu)
+    sqlite3 (2.9.2-x86_64-linux-musl)
     unicode-display_width (3.2.0)
       unicode-emoji (~> 4.1)
     unicode-emoji (4.2.0)
@@ -130,6 +134,8 @@ DEPENDENCIES
   rubocop-rake
   semantic_logger
   sentry-ruby
+  sequel
+  sqlite3
 
 RUBY VERSION
   ruby 4.0.2
