@@ -1,4 +1,7 @@
 name: Run MiniTest
+permissions:
+  contents: read
+  pull-requests: write
 on: [push]
 jobs:
   test:
