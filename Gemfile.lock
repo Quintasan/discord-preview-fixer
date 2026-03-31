@@ -43,7 +43,7 @@ GEM
     mime-types (3.7.0)
       logger
       mime-types-data (~> 3.2025, >= 3.2025.0507)
-    mime-types-data (3.2026.0303)
+    mime-types-data (3.2026.0317)
     minitest (6.0.2)
       drb (~> 2.0)
       prism (~> 1.5)
@@ -100,10 +100,14 @@ GEM
     ruby-progressbar (1.13.0)
     semantic_logger (4.17.0)
       concurrent-ruby (~> 1.0)
-    sentry-ruby (6.4.1)
+    sentry-ruby (6.5.0)
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
       logger
+    sequel (5.102.0)
+      bigdecimal
+    sqlite3 (2.9.2-x86_64-linux-gnu)
+    sqlite3 (2.9.2-x86_64-linux-musl)
     unicode-display_width (3.2.0)
       unicode-emoji (~> 4.1)
     unicode-emoji (4.2.0)
@@ -130,9 +134,11 @@ DEPENDENCIES
   rubocop-rake
   semantic_logger
   sentry-ruby
+  sequel
+  sqlite3
 
 RUBY VERSION
-  ruby 4.0.1
+  ruby 4.0.2
 
 BUNDLED WITH
-  4.0.3
+  4.0.8

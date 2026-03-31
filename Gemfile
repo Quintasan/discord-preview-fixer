@@ -2,12 +2,14 @@
 
 source 'https://rubygems.org'
 
-ruby '4.0.1'
+ruby '4.0.2'
 
 gem 'discordrb'
 gem 'dotenv', require: 'dotenv/load'
 gem 'semantic_logger'
 gem 'sentry-ruby'
+gem 'sequel'
+gem 'sqlite3'
 
 group :development do
   gem 'lefthook'
