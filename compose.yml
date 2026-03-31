@@ -1,7 +1,7 @@
 version: '3'
 services:
   bot:
-    image: ghcr.io/quintasan/discord-preview-fixer:v1.3.8
+    image: ghcr.io/quintasan/discord-preview-fixer:v1.4.0
     build:
       context: .
       dockerfile: Dockerfile
@@ -9,7 +9,7 @@ services:
       DISCORD_PREVIEW_FIXER_TOKEN:
       SENTRY_DSN:
       SENTRY_ENVIRONMENT:
-      SENTRY_RELEASE: v1.3.8
+      SENTRY_RELEASE: v1.4.0
       DISCORDRB_NONACL: true # makes it shut up about missign libsodium
       DB_PATH: /app/db/messages.db
     volumes:
