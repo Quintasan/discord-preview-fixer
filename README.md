@@ -8,6 +8,7 @@ This is a simple Discord bot that scans messaages for links to Pixiv/Twitter, re
 | Pixiv    | phixiv.net    |                                  |
 | Reddit   | rxddit.com    |                                  |
 | AmiAmi   | figurki.harvestasha.org    |                                  |
+| TikTok   | tnktok.com    |                                  |
 
 ## How to use
 

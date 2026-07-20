@@ -8,6 +8,7 @@ require_relative 'lib/amiami'
 require_relative 'lib/twitter'
 require_relative 'lib/reddit'
 require_relative 'lib/instagram'
+require_relative 'lib/tiktok'
 require_relative 'lib/message'
 Bundler.require(:default)
 BOT = Discordrb::Bot.new(token: ENV.fetch('DISCORD_PREVIEW_FIXER_TOKEN'))
