@@ -1,2 +1,9 @@
 [tools]
 ruby = "4.0.6"
+
+[tasks.setup]
+description = "Install dependencies"
+run = [
+  "bundle install --jobs=$(nproc)",
+  "bundle exec lefthook install -f"
+]
