@@ -3,4 +3,5 @@ Dockerfile
 lefthook.yml
 Rakefile
 README.md
+mise.toml
 test/

@@ -10,6 +10,7 @@ require_relative 'lib/reddit'
 require_relative 'lib/instagram'
 require_relative 'lib/tiktok'
 require_relative 'lib/link_fixer'
+require_relative 'lib/health'
 require_relative 'lib/message'
 Bundler.require(:default)
 BOT = Discordrb::Bot.new(token: ENV.fetch('DISCORD_PREVIEW_FIXER_TOKEN'))
@@ -66,4 +67,11 @@ end
 
 LOGGER.info('Starting Discord Link Expander')
 LOGGER.info('Supported services', services: Service.subclasses.map(&:name))
+
+begin
+  HealthServer.start(bot: BOT, logger: LOGGER)
+rescue StandardError => e
+  LOGGER.warn('Failed to start health server', error: e.message)
+end
+
 BOT.run

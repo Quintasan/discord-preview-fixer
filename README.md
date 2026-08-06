@@ -50,3 +50,5 @@ If I missed something, or some permissions are not necessary then please let me 
 4. `docker compose up -d`
 
 Alternatively you can build the image yourself - run `docker compose build` instead of `docker compose pull`.
+
+The container runs a health check against `http://127.0.0.1:8080/healthz` (port configurable via the `HEALTHCHECK_PORT` environment variable). The bot's status shows as `healthy` in `docker ps` only while it is connected to Discord; it reports `unhealthy` while starting up or if the gateway connection drops.

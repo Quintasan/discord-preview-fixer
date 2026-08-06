@@ -17,4 +17,7 @@ RUN addgroup app && \
 USER app
 VOLUME /app/db
 ENV DB_PATH=/app/db/messages.db
+EXPOSE 8080
+HEALTHCHECK --interval=30s --timeout=5s --start-period=45s --retries=3 \
+  CMD wget -q -O - http://127.0.0.1:8080/healthz | grep -q ok
 CMD ["bundle", "exec", "ruby", "main.rb"]
