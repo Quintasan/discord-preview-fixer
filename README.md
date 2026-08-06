@@ -1,13 +1,14 @@
 # Discord Preview Fixer
 
-This is a simple Discord bot that scans messaages for links to Pixiv/Twitter, removes the preview from them and posts a link to a more better preview service.
+This is a simple Discord bot that scans messages for links to supported services, removes the preview from them and posts a link to a better preview service.
 
 | Service  | Replacement   | Notes                            |
 |----------|---------------|----------------------------------|
-| Twtitter | vxtwitter.com | Will convert x.com links as well |
+| Twitter  | vxtwitter.com | Will convert x.com links as well |
 | Pixiv    | phixiv.net    |                                  |
 | Reddit   | rxddit.com    |                                  |
 | AmiAmi   | figurki.harvestasha.org    |                                  |
+| Instagram| eeinstagram.com    |                                  |
 | TikTok   | tnktok.com    |                                  |
 
 ## How to use
@@ -34,7 +35,7 @@ If I missed something, or some permissions are not necessary then please let me 
 
 ### Manual install
 
-0. You need Ruby 2.7 or later
+0. You need Ruby 4.0.6 or later
 1. Clone this repository
 2. `bundle install --jobs=$(nproc)`
 3. `echo "DISCORD_PREVIEW_FIXER_TOKEN=<your Discord bot token here>" > .env`
