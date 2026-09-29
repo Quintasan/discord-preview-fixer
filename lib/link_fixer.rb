@@ -4,7 +4,7 @@ require 'uri'
 require_relative 'service'
 
 class LinkFixer
-  HTTP_REGEX = URI::DEFAULT_PARSER.make_regexp(%w[http https])
+  HTTP_REGEX = URI::RFC2396_PARSER.make_regexp(%w[http https])
 
   TRAILING_PUNCTUATION = /[.,!?;:)\]}>"']+\z/
 
