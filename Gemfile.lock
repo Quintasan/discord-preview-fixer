@@ -92,6 +92,7 @@ GEM
       lint_roller (~> 1.1)
       rubocop (>= 1.72.1, < 2)
     ruby-progressbar (1.13.0)
+    rubydex (0.4.1-x86_64-linux)
     semantic_logger (5.1.0)
       concurrent-ruby (~> 1.0)
     sentry-ruby (7.0.0)
@@ -128,6 +129,7 @@ DEPENDENCIES
   rubocop-minitest
   rubocop-rake
   rubocop-sequel
+  rubydex
   semantic_logger
   sentry-ruby
   sequel
