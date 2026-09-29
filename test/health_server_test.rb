@@ -18,6 +18,43 @@ class HealthServerTest < Minitest::Test
     %i[info error warn debug].each { |level| define_method(level) { |*_args| nil } }
   end
 
+  class RecordingLogger
+    attr_reader :errors
+
+    def initialize
+      @errors = []
+    end
+
+    def error(message, **context)
+      @errors << [message, context]
+    end
+
+    %i[info warn debug].each { |level| define_method(level) { |*_args, **_kwargs| nil } }
+  end
+
+  # Raises a recoverable error on the first accept, then reports the socket as
+  # closed so #serve can exit its retry loop.
+  class FlakyTCPServer
+    def initialize
+      @calls = 0
+    end
+
+    def accept
+      @calls += 1
+      raise StandardError, 'boom' if @calls == 1
+
+      raise IOError, 'closed'
+    end
+  end
+
+  class ClosableServer
+    attr_reader :closed
+
+    def close
+      @closed = true
+    end
+  end
+
   def setup
     @server = HealthServer.start(bot: StubBot.new(true), logger: NullLogger.new, port: 0)
   end
@@ -41,6 +78,28 @@ class HealthServerTest < Minitest::Test
 
     assert_equal '503', status
     assert_equal 'unhealthy', body
+  end
+
+  def test_logs_and_retries_when_accept_fails
+    logger = RecordingLogger.new
+    server = HealthServer.allocate
+    server.instance_variable_set(:@logger, logger)
+    server.instance_variable_set(:@tcp_server, FlakyTCPServer.new)
+    server.define_singleton_method(:sleep) { |_seconds| nil }
+
+    server.send(:serve)
+
+    assert_equal [['Health server error', { error: 'boom' }]], logger.errors
+  end
+
+  def test_stop_without_started_thread
+    server = HealthServer.allocate
+    tcp_server = ClosableServer.new
+    server.instance_variable_set(:@tcp_server, tcp_server)
+
+    server.stop
+
+    assert tcp_server.closed
   end
 
   private
