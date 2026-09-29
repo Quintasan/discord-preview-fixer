@@ -16,4 +16,14 @@ class TwitterTest < Minitest::Test
   def test_xcom_link
     assert_equal @expected, Twitter.fix_link(@xcom_link)
   end
+
+  def test_uppercase_host
+    link = URI.parse('https://TWITTER.COM/user/status/1')
+
+    assert_equal 'https://vxtwitter.com/user/status/1', Twitter.fix_link(link)
+  end
+
+  def test_returns_nil_for_other_host
+    assert_nil Twitter.fix_link(URI.parse('https://example.com/user/status/1'))
+  end
 end

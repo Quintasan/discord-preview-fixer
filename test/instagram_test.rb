@@ -12,4 +12,14 @@ class InstagramTest < Minitest::Test
 
     assert_equal expected, Instagram.fix_link(@link)
   end
+
+  def test_without_www
+    link = URI.parse('https://instagram.com/reel/abc/')
+
+    assert_equal 'https://eeinstagram.com/reel/abc/', Instagram.fix_link(link)
+  end
+
+  def test_returns_nil_for_other_host
+    assert_nil Instagram.fix_link(URI.parse('https://example.com/reel/abc/'))
+  end
 end

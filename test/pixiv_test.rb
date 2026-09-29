@@ -26,4 +26,14 @@ class PixivTest < Minitest::Test
 
     assert_equal expected, Pixiv.fix_link(@without_www)
   end
+
+  def test_uppercase_host
+    link = URI.parse('https://WWW.PIXIV.NET/en/artworks/1')
+
+    assert_equal 'https://phixiv.net/en/artworks/1', Pixiv.fix_link(link)
+  end
+
+  def test_returns_nil_for_other_host
+    assert_nil Pixiv.fix_link(URI.parse('https://example.com/en/artworks/1'))
+  end
 end

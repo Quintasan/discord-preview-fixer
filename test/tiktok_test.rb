@@ -26,4 +26,14 @@ class TiktokTest < Minitest::Test
 
     assert_equal expected, Tiktok.fix_link(@without_www)
   end
+
+  def test_vt_short_link
+    link = URI.parse('https://vt.tiktok.com/ZMeXxxxxx/')
+
+    assert_equal 'https://tnktok.com/ZMeXxxxxx/', Tiktok.fix_link(link)
+  end
+
+  def test_returns_nil_for_other_host
+    assert_nil Tiktok.fix_link(URI.parse('https://example.com/@username/video/1'))
+  end
 end
