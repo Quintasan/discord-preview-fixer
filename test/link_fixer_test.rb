@@ -66,4 +66,8 @@ class LinkFixerTest < Minitest::Test
   def test_returns_empty_for_nil
     assert_empty LinkFixer.fix(nil)
   end
+
+  def test_ignores_malformed_uri_matched_by_regex
+    assert_empty LinkFixer.fix('see http://#[ here')
+  end
 end
