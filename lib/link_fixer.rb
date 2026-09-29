@@ -29,8 +29,8 @@ class LinkFixer
 
   def extract_uris
     @message.to_enum(:scan, HTTP_REGEX).filter_map do
+      # The HTTP regexp always matches at least "http://", so the URI is never blank.
       raw = Regexp.last_match(0).sub(TRAILING_PUNCTUATION, '')
-      next if raw.empty?
 
       URI.parse(raw)
     rescue URI::InvalidURIError
