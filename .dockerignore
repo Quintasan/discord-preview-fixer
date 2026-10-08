@@ -1,7 +1,37 @@
-compose.yml
+# Version control and CI
+.github/
+.git/
+.gitignore
+
+# Container build files
 Dockerfile
+.dockerignore
+compose.yml
+
+# Documentation
+README.md
+
+# Local development tooling
+.editorconfig
+.rubocop.yml
 lefthook.yml
 Rakefile
-README.md
 mise.toml
 test/
+coverage/
+.worktrees/
+vendor/bundle/
+
+# Agent and editor state
+.operator/
+.operator-shared/
+.pi/
+.mcp.json
+
+# Environment and secrets
+.env
+.env.example
+.infisical.json
+
+# Local databases
+*.db
