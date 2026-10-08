@@ -35,7 +35,7 @@ If I missed something, or some permissions are not necessary then please let me 
 
 ### Manual install
 
-0. You need Ruby 4.0.6 or later
+0. You need Ruby 4.0.7 or later
 1. Clone this repository
 2. `bundle install --jobs=$(nproc)`
 3. `echo "DISCORD_PREVIEW_FIXER_TOKEN=<your Discord bot token here>" > .env`

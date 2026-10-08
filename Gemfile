@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-ruby '4.0.6'
+ruby '4.0.7'
 
 gem 'discordrb'
 gem 'dotenv', require: 'dotenv/load'
