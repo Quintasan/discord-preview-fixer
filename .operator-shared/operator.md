@@ -8,6 +8,7 @@ Repo-wide doctrine for Discord Preview Fixer. Published with the repository.
 - Do not make wide or destructive changes without explicit approval.
 - Never push without asking first.
 - Before an atomic commit, run `bundle exec rubocop` and `bundle exec rake test`; both must pass. CI (`.github/workflows/minitest.yml`) runs `bundle exec rake` then `bundle exec rubocop`; the lefthook pre-commit hook runs RuboCop against staged `*.rb`.
+- Releases: bump both `IMAGE_TAG` and `SENTRY_RELEASE` defaults in `compose.yml`, commit as `Release vX.Y.Z`, then create a signed annotated tag `vX.Y.Z` (`tag.gpgSign=true`, `gpg.format=ssh`) and push it. The tag push is what builds and publishes the GHCR image, so the image tag and `compose.yml` must stay in lockstep.
 
 ## Rules
 
