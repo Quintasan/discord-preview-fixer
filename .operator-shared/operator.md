@@ -1,0 +1,25 @@
+# Shared Operator Instructions
+
+Repo-wide doctrine for Discord Preview Fixer. Published with the repository.
+
+## Workflow
+
+- Plan first for multi-step work, then implement after approval. Trivial one-line fixes proceed directly.
+- Do not make wide or destructive changes without explicit approval.
+- Never push without asking first.
+- Before an atomic commit, run `bundle exec rubocop` and `bundle exec rake test`; both must pass. CI (`.github/workflows/minitest.yml`) runs `bundle exec rake` then `bundle exec rubocop`; the lefthook pre-commit hook runs RuboCop against staged `*.rb`.
+
+## Rules
+
+- Ruby is pinned to 4.0.7 (`Gemfile`, `mise.toml`). Do not bump it without approval.
+- Every Ruby file begins with `# frozen_string_literal: true`.
+- Adding a link service: subclass `Service`, define `HOST_REGEX` and `REPLACEMENT_HOST`, then require the file in both `main.rb` and `test/test_helper.rb`. Nothing else registers it — dispatch is `Service.subclasses`.
+- Keep branch coverage at or above the 90% floor enforced in `test/test_helper.rb`. New behavior needs tests.
+- Add gems only with explicit approval.
+
+## Style
+
+- RuboCop is authoritative (`.rubocop.yml`): rubocop-minitest, rubocop-rake, and rubocop-sequel are loaded, `NewCops: enable`, `Style/Documentation` disabled.
+- One class per file. `LinkFixer` owns extraction and rewriting; `Handlers` owns Discord event side effects; `Message` owns persistence.
+- Private helpers go at the bottom of the class under `private`.
+- Documentation and specs are present tense and focused on contracts the code cannot show; do not restate implementation.
