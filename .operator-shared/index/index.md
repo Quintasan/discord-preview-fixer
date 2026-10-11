@@ -14,7 +14,7 @@ read_if: Navigating the codebase, locating a link service, or deciding where new
 
 ## Project Index
 
-- `main.rb` — Bot entrypoint: requires every service, builds `Discordrb::Bot` + `Handlers` + logger, starts `HealthServer`, subscribes `message` (content filtered by `LinkFixer::HTTP_REGEX`) and `message_delete`, then blocks on `BOT.run`.
+- `main.rb` — Bot entrypoint: requires every service, builds `Discordrb::Bot` + `Handlers` + logger, subscribes `message` (content filtered by `LinkFixer::HTTP_REGEX`), `message_edit`, and `message_delete`, starts a daily pruner for stale message rows, starts `HealthServer`, then blocks on `BOT.run`.
 - `README.md` — Ditto
 - `Gemfile`, `Gemfile.lock` — Ditto
 - `Rakefile` — Ditto
@@ -33,16 +33,18 @@ read_if: Navigating the codebase, locating a link service, or deciding where new
 ### `lib/` — Bot logic and link-service definitions
 
 - `service.rb` — `Service` base class; `fix_link` returns a rewritten URI string on a `HOST_REGEX` match, else `nil`.
-- `link_fixer.rb` — Extracts URLs from message text, strips trailing punctuation, dispatches through `Service.subclasses`, wraps results in spoilers when the original is spoilered.
-- `handlers.rb` — Discord event side effects: reply with fixed links, persist the message pair, suppress embeds, and clean up on message deletion.
-- `message.rb` — Sequel/SQLite setup plus the `Message` model (unique `original_message_id`, paired `fixed_message_id`).
-- `health.rb` — `HealthServer`: loopback TCP health endpoint returning 200 when the bot reports connected, else 503; used by the container health check.
+- `link_fixer.rb` — Extracts URLs from message text, strips trailing punctuation, deduplicates repeated results, dispatches through `Service.subclasses`, wraps results in spoilers when the original is spoilered.
+- `handlers.rb` — Discord event side effects: reply with fixed links, re-sync the reply on message edit, ignore bot authors, persist the message pair, suppress embeds, and clean up on message/fixed-reply deletion.
+- `message.rb` — Sequel/SQLite connection plus the `Message` model (unique `original_message_id`, paired `fixed_message_id`, `created_at`) and `Message.prune` for stale rows.
+- `message_schema.rb` — Owns the `messages` table: creates it, backfills `created_at`, and adds the `fixed_message_id` index for databases created before either existed.
+- `health.rb` — `HealthServer`: loopback TCP endpoint answering `GET /healthz` with 200/503 and 404 for any other path or method, bounding request reads so a stalled client cannot block it; used by the container health check.
 - `sentry.rb` — Sentry initialization (breadcrumbs logger config).
 - `twitter.rb`, `pixiv.rb`, `reddit.rb`, `amiami.rb`, `instagram.rb`, `tiktok.rb` — One `Service` subclass each, differing only in `HOST_REGEX` and `REPLACEMENT_HOST` (vxtwitter.com, phixiv.net, rxddit.com, figurki.harvestasha.org, eeinstagram.com, tnktok.com).
 
 ### `test/` — Minitest suite
 
-- `test_helper.rb` — SimpleCov setup (90% branch minimum), forces `DB_PATH=:memory:`, requires every `lib/` service under test.
+- `test_helper.rb` — SimpleCov setup (90% coverage minimum, branch coverage enabled), forces `DB_PATH=:memory:`, requires every `lib/` module under test.
 - `link_fixer_test.rb`, `service_test.rb` — Core extraction/rewrite and dispatch behavior.
-- `handlers_test.rb`, `message_test.rb`, `health_server_test.rb` — Event handlers with fake events, the Sequel model, and the health endpoint.
-- `twitter_test.rb`, `pixiv_test.rb`, `reddit_test.rb`, `amiami_test.rb`, `instagram_test.rb`, `tiktok_test.rb` — Per-service host matching and replacement tests.
+- `handlers_test.rb`, `message_test.rb`, `health_server_test.rb` — Event handlers (reply/edit/delete, bot filter, dedupe) with fake events, the Sequel model plus pruning, and the health endpoint including 404 paths and read timeouts.
+- `message_schema_test.rb` — Fresh, legacy, and idempotent `MessageSchema.install` paths.
+- `services_test.rb` — Table-driven per-service host matching and replacement for every supported URL shape.

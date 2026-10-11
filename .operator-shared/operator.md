@@ -20,7 +20,7 @@ Repo-wide doctrine for Discord Preview Fixer. Published with the repository.
 
 ## Style
 
-- RuboCop is authoritative (`.rubocop.yml`): rubocop-minitest, rubocop-rake, and rubocop-sequel are loaded, `NewCops: enable`, `Style/Documentation` disabled.
+- RuboCop is authoritative (`.rubocop.yml`): rubocop-minitest, rubocop-rake, and rubocop-sequel are loaded, `NewCops: enable`, `Style/Documentation` disabled, and `Metrics/ClassLength` excluded under `test/**/*` (test classes grow with their cases).
 - One class per file. `LinkFixer` owns extraction and rewriting; `Handlers` owns Discord event side effects; `Message` owns persistence.
 - Private helpers go at the bottom of the class under `private`.
 - Documentation and specs are present tense and focused on contracts the code cannot show; do not restate implementation.

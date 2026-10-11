@@ -1,6 +1,6 @@
 # Discord Preview Fixer
 
-This is a simple Discord bot that scans messages for links to supported services, removes the preview from them and posts a link to a better preview service.
+This is a simple Discord bot that scans messages for links to supported services, removes the preview from them and posts a link to a better preview service. It keeps that reply in sync when the original message is edited, and removes it when the original is deleted.
 
 | Service  | Replacement   | Notes                            |
 |----------|---------------|----------------------------------|
