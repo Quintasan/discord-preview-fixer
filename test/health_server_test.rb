@@ -55,6 +55,23 @@ class HealthServerTest < Minitest::Test
     end
   end
 
+  class StallingClient
+    attr_reader :closed, :written
+
+    def initialize
+      @closed = false
+      @written = false
+    end
+
+    def write(_data)
+      @written = true
+    end
+
+    def close
+      @closed = true
+    end
+  end
+
   def setup
     @server = HealthServer.start(bot: StubBot.new(true), logger: NullLogger.new, port: 0)
   end
@@ -102,11 +119,36 @@ class HealthServerTest < Minitest::Test
     assert tcp_server.closed
   end
 
+  def test_closes_without_reading_when_client_stalls
+    server = HealthServer.allocate
+    server.define_singleton_method(:readable?) { |_client| nil }
+    client = StallingClient.new
+
+    server.send(:handle, client)
+
+    refute client.written
+    assert client.closed
+  end
+
+  def test_returns_404_for_unknown_path
+    status, body = request(path: '/unknown')
+
+    assert_equal '404', status
+    assert_equal 'not found', body
+  end
+
+  def test_returns_404_for_non_get_method
+    status, body = request(method: 'POST')
+
+    assert_equal '404', status
+    assert_equal 'not found', body
+  end
+
   private
 
-  def request
+  def request(path: '/healthz', method: 'GET')
     socket = TCPSocket.new('127.0.0.1', @server.port)
-    socket.write("GET /healthz HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n")
+    socket.write("#{method} #{path} HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n")
     response = socket.read
     socket.close
 

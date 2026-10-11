@@ -34,6 +34,22 @@ end
 LOGGER.info('Starting Discord Link Expander')
 LOGGER.info('Supported services', services: Service.subclasses.map(&:name))
 
+# The DB only drops a record when the original message's deletion is observed,
+# so prune anything older than the retention window in case the bot was offline.
+PRUNE_AFTER = 30 * 24 * 60 * 60
+PRUNE_INTERVAL = 24 * 60 * 60
+
+Thread.new do
+  loop do
+    count = Message.prune(older_than: Time.now - PRUNE_AFTER)
+    LOGGER.info('Pruned stale message records', count:) if count.positive?
+    sleep PRUNE_INTERVAL
+  rescue StandardError => e
+    LOGGER.error('Failed to prune stale message records', error: e.message)
+    sleep PRUNE_INTERVAL
+  end
+end
+
 begin
   HealthServer.start(bot: BOT, logger: LOGGER)
 rescue StandardError => e

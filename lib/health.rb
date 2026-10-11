@@ -7,6 +7,7 @@ require 'socket'
 # if the process is alive *and* actually working.
 class HealthServer
   DEFAULT_PORT = 8080
+  READ_TIMEOUT = 5
 
   def self.start(bot:, logger:, port: ENV.fetch('HEALTHCHECK_PORT', DEFAULT_PORT))
     new(bot:, logger:, port:).start
@@ -48,17 +49,27 @@ class HealthServer
   end
 
   def handle(client)
-    client.gets # consume the request line
-    client.write(response_for(@bot.connected?))
+    client.write(response_for(client.gets)) if readable?(client)
   ensure
     client.close
   end
 
-  def response_for(healthy)
-    status = healthy ? 200 : 503
-    reason = healthy ? 'OK' : 'Service Unavailable'
-    body = healthy ? 'ok' : 'unhealthy'
+  # A client that connects but never sends would otherwise block the accept
+  # loop forever and stall the container health check.
+  def readable?(client)
+    client.wait_readable(READ_TIMEOUT)
+  end
 
+  # Only GET /healthz is a health probe; anything else gets a 404 so a stray
+  # request cannot be mistaken for a healthy response.
+  def response_for(request_line)
+    method, path, = request_line.to_s.split
+    return response(404, 'Not Found', 'not found') unless method == 'GET' && path == '/healthz'
+
+    @bot.connected? ? response(200, 'OK', 'ok') : response(503, 'Service Unavailable', 'unhealthy')
+  end
+
+  def response(status, reason, body)
     "HTTP/1.1 #{status} #{reason}\r\n" \
       "Content-Type: text/plain\r\n" \
       "Content-Length: #{body.bytesize}\r\n" \

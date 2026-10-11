@@ -43,4 +43,25 @@ class MessageTest < Minitest::Test
       Message.create(original_message_id: nil, fixed_message_id: nil)
     end
   end
+
+  def test_sets_created_at_on_create
+    msg = Message.create(original_message_id: 111, fixed_message_id: 222)
+
+    refute_nil msg.created_at
+  end
+
+  def test_prune_removes_only_records_older_than_the_cutoff
+    Message.create(original_message_id: 1, fixed_message_id: 2, created_at: days_ago(40))
+    Message.create(original_message_id: 3, fixed_message_id: 4, created_at: days_ago(10))
+
+    assert_equal 1, Message.prune(older_than: days_ago(30))
+    assert_nil Message.first(original_message_id: 1)
+    refute_nil Message.first(original_message_id: 3)
+  end
+
+  private
+
+  def days_ago(count)
+    Time.now - (count * 86_400)
+  end
 end
