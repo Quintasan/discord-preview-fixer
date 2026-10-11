@@ -70,4 +70,10 @@ class LinkFixerTest < Minitest::Test
   def test_ignores_malformed_uri_matched_by_regex
     assert_empty LinkFixer.fix('see http://#[ here')
   end
+
+  def test_deduplicates_links_that_rewrite_to_the_same_fixed_url
+    message = 'https://twitter.com/a/status/1 and https://x.com/a/status/1 and https://twitter.com/a/status/1'
+
+    assert_equal ['https://vxtwitter.com/a/status/1'], LinkFixer.fix(message)
+  end
 end

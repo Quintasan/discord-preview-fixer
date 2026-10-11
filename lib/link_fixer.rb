@@ -19,7 +19,7 @@ class LinkFixer
   end
 
   def fix
-    links = extract_uris.filter_map { |uri| fix_uri(uri) }
+    links = extract_uris.filter_map { |uri| fix_uri(uri) }.uniq
     return [] if links.empty?
 
     wrap_in_spoilers(links)
