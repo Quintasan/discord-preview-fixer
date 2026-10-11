@@ -76,9 +76,10 @@ class Handlers
 
   def reply(event, reply_content)
     response = event.respond(reply_content, false, nil, nil, false, event.message)
-    Message.find_or_create(original_message_id: event.message.id) do |record|
-      record.fixed_message_id = response.id
-    end
+    Message.dataset.insert_conflict(target: :original_message_id).insert(
+      original_message_id: event.message.id,
+      fixed_message_id: response.id
+    )
   rescue StandardError => e
     @logger.error('Failed to reply with fixed link', error: e.message, backtrace: e.backtrace&.first(5))
     @sentry.capture_exception(e)
