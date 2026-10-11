@@ -9,5 +9,9 @@ AllCops:
 Style/HashSyntax:
   EnforcedShorthandSyntax: consistent
 
+Metrics/ClassLength:
+  Exclude:
+    - 'test/**/*'
+
 Style/Documentation:
   Enabled: false

@@ -27,6 +27,10 @@ BOT.message(contains: LinkFixer::HTTP_REGEX) do |event|
   HANDLERS.on_message(event)
 end
 
+BOT.message_edit do |event|
+  HANDLERS.on_message_edit(event)
+end
+
 BOT.message_delete do |event|
   HANDLERS.on_message_delete(event)
 end
