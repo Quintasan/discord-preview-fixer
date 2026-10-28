@@ -8,7 +8,7 @@ Repo-wide doctrine for Discord Preview Fixer. Published with the repository.
 - Do not make wide or destructive changes without explicit approval.
 - Never push without asking first.
 - Before an atomic commit, run `bundle exec rubocop` and `bundle exec rake test`; both must pass. CI (`.github/workflows/minitest.yml`) runs `bundle exec rake` then `bundle exec rubocop`; the lefthook pre-commit hook runs RuboCop against staged `*.rb`.
-- Releases: bump both `IMAGE_TAG` and `SENTRY_RELEASE` defaults in `compose.yml`, commit as `Release vX.Y.Z`, then create a signed annotated tag `vX.Y.Z` (`tag.gpgSign=true`, `gpg.format=ssh`) and push it. The tag push is what builds and publishes the GHCR image, so the image tag and `compose.yml` must stay in lockstep.
+- Releases: bump both `IMAGE_TAG` and `SENTRY_RELEASE` defaults in `compose.yml`, commit as `Release vX.Y.Z`, then create a signed annotated tag `vX.Y.Z` with `git tag -s vX.Y.Z -m "Release vX.Y.Z"` (`gpg.format=ssh` and `commit.gpgsign=true` are set; `tag.gpgSign` is not, so the `-s` is not automatic) and push it. The tag push is what builds and publishes the GHCR image, so the image tag and `compose.yml` must stay in lockstep. Push the branch and the tag together with `git push --atomic origin master vX.Y.Z`, otherwise the release commit and the image tag can land apart. Note that `.github/workflows/minitest.yml` has an unfiltered `on: push`, so a tag push runs CI as well as the image build; adding `branches: [master]` there would leave releases to the single publish pipeline.
 
 ## Rules
 
