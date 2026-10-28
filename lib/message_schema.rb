@@ -3,9 +3,11 @@
 require 'sequel'
 
 # Owns the messages table layout, including the one-time migration of databases
-# created before created_at, channel_id, or the fixed_message_id index existed.
+# created before created_at, channel_id, or the fixed_message_id or created_at
+# indexes existed.
 class MessageSchema
   FIXED_MESSAGE_ID_INDEX = :messages_fixed_message_id_index
+  CREATED_AT_INDEX = :messages_created_at_index
 
   class << self
     def install(db)
@@ -13,6 +15,7 @@ class MessageSchema
       backfill_created_at(db)
       add_channel_id(db)
       add_fixed_message_id_index(db)
+      add_created_at_index(db)
     end
 
     private
@@ -26,6 +29,7 @@ class MessageSchema
         DateTime :created_at, null: false, default: Sequel::CURRENT_TIMESTAMP
         index :original_message_id, unique: true
         index :fixed_message_id
+        index :created_at
       end
     end
 
@@ -46,6 +50,14 @@ class MessageSchema
       return if db.indexes(:messages).key?(FIXED_MESSAGE_ID_INDEX)
 
       db.add_index(:messages, :fixed_message_id)
+    end
+
+    # The prune is the only scan of this table: it bounds the cost of a retention
+    # pass by the stale row count instead of the table size.
+    def add_created_at_index(db)
+      return if db.indexes(:messages).key?(CREATED_AT_INDEX)
+
+      db.add_index(:messages, :created_at)
     end
 
     def columns(db)

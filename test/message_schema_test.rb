@@ -15,6 +15,14 @@ class MessageSchemaTest < Minitest::Test
     assert db.indexes(:messages).key?(:messages_fixed_message_id_index)
   end
 
+  def test_installs_the_created_at_index
+    db = Sequel.sqlite
+
+    MessageSchema.install(db)
+
+    assert db.indexes(:messages).key?(:messages_created_at_index)
+  end
+
   def test_backfills_created_at_on_a_legacy_database
     db = legacy_database
     db[:messages].insert(original_message_id: 1, fixed_message_id: 2)
@@ -40,6 +48,14 @@ class MessageSchemaTest < Minitest::Test
     assert db.indexes(:messages).key?(:messages_fixed_message_id_index)
   end
 
+  def test_adds_the_created_at_index_to_a_legacy_database
+    db = legacy_database
+
+    MessageSchema.install(db)
+
+    assert db.indexes(:messages).key?(:messages_created_at_index)
+  end
+
   def test_install_is_idempotent
     db = Sequel.sqlite
 
@@ -47,12 +63,13 @@ class MessageSchemaTest < Minitest::Test
     MessageSchema.install(db)
 
     assert_empty db[:messages]
+    assert db.indexes(:messages).key?(:messages_created_at_index)
   end
 
   private
 
   # The table shape from before created_at, channel_id, and the
-  # fixed_message_id index existed.
+  # fixed_message_id and created_at indexes existed.
   def legacy_database
     db = Sequel.sqlite
     db.create_table(:messages) do
