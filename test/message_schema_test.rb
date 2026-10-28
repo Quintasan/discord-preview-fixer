@@ -8,7 +8,10 @@ class MessageSchemaTest < Minitest::Test
 
     MessageSchema.install(db)
 
-    assert_includes db.schema(:messages).map(&:first), :created_at
+    columns = db.schema(:messages).map(&:first)
+
+    assert_includes columns, :created_at
+    assert_includes columns, :channel_id
     assert db.indexes(:messages).key?(:messages_fixed_message_id_index)
   end
 
@@ -18,8 +21,22 @@ class MessageSchemaTest < Minitest::Test
 
     MessageSchema.install(db)
 
-    assert_includes db.schema(:messages).map(&:first), :created_at
     refute_nil db[:messages].first[:created_at]
+  end
+
+  def test_adds_channel_id_to_a_legacy_database
+    db = legacy_database
+
+    MessageSchema.install(db)
+
+    assert_includes db.schema(:messages).map(&:first), :channel_id
+  end
+
+  def test_adds_the_fixed_message_id_index_to_a_legacy_database
+    db = legacy_database
+
+    MessageSchema.install(db)
+
     assert db.indexes(:messages).key?(:messages_fixed_message_id_index)
   end
 
@@ -34,7 +51,8 @@ class MessageSchemaTest < Minitest::Test
 
   private
 
-  # The table shape from before created_at and the fixed_message_id index existed.
+  # The table shape from before created_at, channel_id, and the
+  # fixed_message_id index existed.
   def legacy_database
     db = Sequel.sqlite
     db.create_table(:messages) do
