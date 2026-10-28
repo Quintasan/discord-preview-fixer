@@ -17,7 +17,7 @@ GEM
       websocket-client-simple (>= 0.9.0)
     discordrb-webhooks (3.8.0)
       rest-client (>= 2.0.0)
-    domain_name (0.6.20260921)
+    domain_name (0.7.20261007)
     dotenv (3.2.0)
     drb (2.2.3)
     event_emitter (0.2.6)
@@ -27,17 +27,17 @@ GEM
     http-accept (1.7.0)
     http-cookie (1.1.6)
       domain_name (~> 0.5)
-    io-console (0.9.4)
-    json (3.0.2)
+    io-console (0.9.5)
+    json (3.1.0)
     language_server-protocol (3.17.0.6)
-    lefthook (2.2.1)
+    lefthook (2.2.2)
     lint_roller (1.1.0)
     logger (1.7.0)
     method_source (1.1.0)
     mime-types (3.7.0)
       logger
       mime-types-data (~> 3.2025, >= 3.2025.0507)
-    mime-types-data (3.2026.1006)
+    mime-types-data (3.2026.1020)
     minitest (6.0.6)
       drb (~> 2.0)
       prism (~> 1.5)
@@ -46,11 +46,11 @@ GEM
     opus-ruby (1.0.1)
       ffi
     parallel (2.3.0)
-    parser (3.3.12.0)
+    parser (3.3.13.0)
       ast (~> 2.4.1)
       racc
     prism (1.9.0)
-    pry (0.16.0)
+    pry (0.16.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
       reline (>= 0.6.0)
@@ -68,14 +68,14 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
-    rubocop (1.91.0)
+    rubocop (1.92.1)
       json (>= 2.3)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.1.0)
       parallel (>= 1.10)
       parser (>= 3.3.0.2)
       rainbow (>= 2.2.2, < 4.0)
-      regexp_parser (>= 2.9.3, < 3.0)
+      regexp_parser (>= 2.11.3, < 3.0)
       rubocop-ast (>= 1.49.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 4.0)
@@ -93,19 +93,18 @@ GEM
       lint_roller (~> 1.1)
       rubocop (>= 1.72.1, < 2)
     ruby-progressbar (1.13.0)
-    rubydex (0.4.1)
-    rubydex (0.4.1-x86_64-linux)
+    rubydex (0.4.3-x86_64-linux)
     semantic_logger (5.1.0)
       concurrent-ruby (~> 1.0)
-    sentry-ruby (7.1.0)
+    sentry-ruby (7.2.0)
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
       logger
     sequel (5.109.0)
       bigdecimal
     simplecov (1.3.2)
-    sqlite3 (2.9.6-x86_64-linux-gnu)
-    sqlite3 (2.9.6-x86_64-linux-musl)
+    sqlite3 (2.10.2-x86_64-linux-gnu)
+    sqlite3 (2.10.2-x86_64-linux-musl)
     unicode-display_width (3.3.0)
       unicode-emoji (~> 4.3)
     unicode-emoji (4.3.0)
@@ -139,7 +138,7 @@ DEPENDENCIES
   sqlite3
 
 RUBY VERSION
-  ruby 4.0.7
+  ruby 4.0.9
 
 BUNDLED WITH
   4.0.20

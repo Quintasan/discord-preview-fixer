@@ -1,5 +1,5 @@
 [tools]
-ruby = "4.0.7"
+ruby = "4.0.9"
 
 [tasks.setup]
 description = "Install dependencies"

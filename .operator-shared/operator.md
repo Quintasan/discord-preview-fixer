@@ -12,7 +12,7 @@ Repo-wide doctrine for Discord Preview Fixer. Published with the repository.
 
 ## Rules
 
-- Ruby is pinned to 4.0.7 (`Gemfile`, `mise.toml`). Do not bump it without approval.
+- Ruby is pinned to 4.0.9 (`Gemfile`, `mise.toml`, `Dockerfile` base image). Do not bump it without approval.
 - Every Ruby file begins with `# frozen_string_literal: true`.
 - Adding a link service: subclass `Service`, define `HOST_REGEX` and `REPLACEMENT_HOST`, then require the file in both `main.rb` and `test/test_helper.rb`. Nothing else registers it — dispatch is `Service.subclasses`.
 - Keep branch coverage at or above the 90% floor enforced in `test/test_helper.rb`. New behavior needs tests.
