@@ -3,10 +3,11 @@ WORKDIR /app
 ENV BUNDLE_WITHOUT=development BUNDLE_PATH=/app/vendor/bundle BUNDLE_BIN=/app/vendor/bundle/bin BUNDLE_DEPLOYMENT=1
 
 FROM base AS build
+RUN apk add --no-cache git build-base ruby-dev linux-headers
+COPY Gemfile Gemfile.lock ./
+RUN bundle install && \
+    rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/bundler/gems/*/.git
 COPY . .
-RUN apk add --no-cache git build-base ruby-dev linux-headers && \
-    bundle install && \
-    rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git
 
 FROM base
 COPY --from=build /app /app
