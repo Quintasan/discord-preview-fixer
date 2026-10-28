@@ -14,13 +14,13 @@ Repo-wide doctrine for Discord Preview Fixer. Published with the repository.
 
 - Ruby is pinned to 4.0.9 (`Gemfile`, `mise.toml`, `Dockerfile` base image). Do not bump it without approval.
 - Every Ruby file begins with `# frozen_string_literal: true`.
-- Adding a link service: subclass `Service`, define `HOST_REGEX` and `REPLACEMENT_HOST`, then require the file in both `main.rb` and `test/test_helper.rb`. Nothing else registers it — dispatch is `Service.subclasses`.
+- Adding a link service: subclass `Service`, define `HOST_REGEX` and `REPLACEMENT_HOST` (override `rewrite` only when a path or query change is needed), then add the file to `lib/services.rb` (the manifest required by `main.rb` and the test helper). Nothing else registers it — dispatch is `Service.subclasses`.
 - Keep branch coverage at or above the 90% floor enforced in `test/test_helper.rb`. New behavior needs tests.
 - Add gems only with explicit approval.
 
 ## Style
 
 - RuboCop is authoritative (`.rubocop.yml`): rubocop-minitest, rubocop-rake, and rubocop-sequel are loaded, `NewCops: enable`, `Style/Documentation` disabled, and `Metrics/ClassLength` excluded under `test/**/*` (test classes grow with their cases).
-- One class per file. `LinkFixer` owns extraction and rewriting; `Handlers` owns Discord event side effects; `Message` owns persistence.
+- One class per file. `LinkFixer` owns extraction and rewriting; `Handlers` dispatches events; `HandlerSupport` owns the guard, bot filtering, and embed suppression shared by handlers; `ReplyContent` fits replies to Discord's limit; `Pruner` owns retention cleanup; `Message` owns persistence.
 - Private helpers go at the bottom of the class under `private`.
 - Documentation and specs are present tense and focused on contracts the code cannot show; do not restate implementation.

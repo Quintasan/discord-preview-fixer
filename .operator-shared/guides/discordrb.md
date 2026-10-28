@@ -19,6 +19,16 @@ Verified against discordrb 3.8.
 `MessageEvent` exposes `#message` and delegates `#author`, `#channel`, and `#content`. It does not
 expose `#id`; read `event.message.id`.
 
+Each handler runs on its own thread (`Bot#call_event`), and discordrb rescues `StandardError` into its
+own logger. Any failure that must reach Sentry has to be rescued and reported inside the handler.
+
+## Replying and mentions
+
+`Message#respond(content, tts, embed, attachments, allowed_mentions, message_reference, ...)`.
+`allowed_mentions: false` is translated to `{ parse: [] }`, but Discord still pings the replied-to
+author because `replied_user` defaults to `true`. Pass `{ parse: [], replied_user: false }`, or use
+`Message#reply!`, which sets it from `mention_user: false`.
+
 ## Editing a reply
 
 `Channel` has `delete_message` but no `edit_message`. Load the message and edit it:
@@ -26,6 +36,28 @@ expose `#id`; read `event.message.id`.
 ```ruby
 channel.load_message(message_id).edit(new_content)
 ```
+
+`Discordrb::Errors::UnknownMessage` (code 10008) is raised when the message is already gone; rescue it
+when an edit or delete may target a deleted message.
+
+## Embed suppression and `Message#edit`
+
+- `Message#suppress_embeds` ORs `SUPPRESS_EMBEDS` (`1 << 2`) onto the cached flags and PATCHes with
+  `content: :undef`, so it never disturbs the body. `message.suppress_embeds?` reads the state.
+- `Message#edit(new_content, new_embeds = nil, new_components = nil, flags = 0)` defaults `flags` to
+  `0`, and `API::Channel.edit_message` serializes `flags` (it only drops `:undef`). A bare
+  `.edit(content)` therefore sends `"flags": 0`, clearing `SUPPRESS_EMBEDS` on the edited message.
+  Pass `message.flags | (1 << 2)` explicitly to edit content while keeping suppression.
+- Discord re-scans content for links when a message is edited, and suppression is a flag asserted on
+  edit rather than an immutable property, so a fixer must re-suppress the original message after an
+  author edit.
+
+## Message length
+
+`content` is capped at 2000 characters by the REST API for bots, users, and webhooks alike. Building
+one reply by joining link lines can exceed that and fails with HTTP 400 (Invalid Form Body), so long
+result sets need chunking or a length guard. This bot keeps complete links up to the limit, drops the
+rest, and truncates a single oversized link (`ReplyContent`).
 
 ## Bot detection
 
