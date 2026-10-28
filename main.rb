@@ -55,6 +55,31 @@ Thread.new do
   end
 end
 
+# Discordrb reconnects on its own, but a process that stays disconnected is
+# still "running" as far as the container runtime is concerned. Stop the bot
+# so the restart policy can replace it.
+WATCHDOG_GRACE = Integer(ENV.fetch('WATCHDOG_GRACE_SECONDS', 300))
+WATCHDOG_INTERVAL = 15
+
+Thread.new do
+  disconnected_since = nil
+  loop do
+    if BOT.connected?
+      disconnected_since = nil
+    else
+      disconnected_since ||= Time.now
+      if Time.now - disconnected_since >= WATCHDOG_GRACE
+        LOGGER.error('Bot disconnected too long; shutting down for restart')
+        BOT.stop
+        break
+      end
+    end
+    sleep WATCHDOG_INTERVAL
+  end
+rescue StandardError => e
+  LOGGER.error('Watchdog failed', error: e.message)
+end
+
 begin
   HealthServer.start(bot: BOT, logger: LOGGER)
 rescue StandardError => e
