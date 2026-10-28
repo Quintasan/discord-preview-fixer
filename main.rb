@@ -80,10 +80,30 @@ rescue StandardError => e
   LOGGER.error('Watchdog failed', error: e.message)
 end
 
-begin
+health_server = begin
   HealthServer.start(bot: BOT, logger: LOGGER)
 rescue StandardError => e
   LOGGER.warn('Failed to start health server', error: e.message)
+  nil
 end
 
-BOT.run
+# Trap handlers run in a restricted context, so only flip a flag there and let
+# a normal thread stop the bot and run the ensure block below.
+shutdown = false
+trap('INT') { shutdown = true }
+trap('TERM') { shutdown = true }
+
+Thread.new do
+  sleep 0.5 until shutdown
+  LOGGER.info('Shutting down')
+  BOT.stop
+rescue StandardError => e
+  LOGGER.error('Failed to stop bot', error: e.message)
+end
+
+begin
+  BOT.run unless shutdown
+ensure
+  health_server&.stop
+  DB.disconnect
+end
