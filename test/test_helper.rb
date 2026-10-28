@@ -9,12 +9,7 @@ end
 
 ENV['DB_PATH'] = ':memory:'
 
-require 'amiami'
-require 'pixiv'
-require 'reddit'
-require 'twitter'
-require 'instagram'
-require 'tiktok'
+require 'services'
 require 'link_fixer'
 require 'message_schema'
 require 'message'

@@ -2,18 +2,14 @@
 # frozen_string_literal: true
 
 require 'bundler/setup'
+Bundler.require(:default)
 require_relative 'lib/sentry'
-require_relative 'lib/pixiv'
-require_relative 'lib/amiami'
-require_relative 'lib/twitter'
-require_relative 'lib/reddit'
-require_relative 'lib/instagram'
-require_relative 'lib/tiktok'
+require_relative 'lib/services'
 require_relative 'lib/link_fixer'
 require_relative 'lib/health'
 require_relative 'lib/message'
 require_relative 'lib/handlers'
-Bundler.require(:default)
+
 BOT = Discordrb::Bot.new(token: ENV.fetch('DISCORD_PREVIEW_FIXER_TOKEN'))
 
 SemanticLogger.application = 'Discord Preview Fixer'
@@ -35,7 +31,7 @@ BOT.message_delete do |event|
   HANDLERS.on_message_delete(event)
 end
 
-LOGGER.info('Starting Discord Link Expander')
+LOGGER.info('Starting Discord Preview Fixer')
 LOGGER.info('Supported services', services: Service.subclasses.map(&:name))
 
 # The DB only drops a record when the original message's deletion is observed,
