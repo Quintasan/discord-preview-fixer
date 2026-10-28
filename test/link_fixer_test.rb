@@ -51,6 +51,55 @@ class LinkFixerTest < Minitest::Test
     assert_equal ['|| https://vxtwitter.com/a/status/1 ||'], LinkFixer.fix(message)
   end
 
+  def test_wraps_only_the_spoilered_link
+    message = '|| https://twitter.com/a/status/1 || and https://twitter.com/b/status/2'
+
+    assert_equal ['|| https://vxtwitter.com/a/status/1 ||', 'https://vxtwitter.com/b/status/2'],
+                 LinkFixer.fix(message)
+  end
+
+  def test_wraps_links_inside_multiline_spoilers
+    message = "||\nhttps://twitter.com/a/status/1\n||"
+
+    assert_equal ['|| https://vxtwitter.com/a/status/1 ||'], LinkFixer.fix(message)
+  end
+
+  def test_spoils_a_link_that_also_appears_outside_a_spoiler
+    message = 'https://twitter.com/a/status/1 ||https://twitter.com/a/status/1||'
+
+    assert_equal ['|| https://vxtwitter.com/a/status/1 ||'], LinkFixer.fix(message)
+  end
+
+  def test_ignores_an_unmatched_spoiler_marker
+    message = '|| https://twitter.com/a/status/1'
+
+    assert_equal ['https://vxtwitter.com/a/status/1'], LinkFixer.fix(message)
+  end
+
+  def test_skips_links_inside_inline_code
+    assert_empty LinkFixer.fix('`https://twitter.com/a/status/1`')
+  end
+
+  def test_skips_links_inside_multi_backtick_code
+    assert_empty LinkFixer.fix('``https://twitter.com/a/status/1``')
+  end
+
+  def test_skips_links_inside_fenced_code
+    assert_empty LinkFixer.fix("```\nhttps://twitter.com/a/status/1\n```")
+  end
+
+  def test_fixes_links_outside_code
+    message = '`https://twitter.com/code/1` https://twitter.com/real/1'
+
+    assert_equal ['https://vxtwitter.com/real/1'], LinkFixer.fix(message)
+  end
+
+  def test_continues_after_an_unmatched_code_marker
+    message = '`unclosed https://twitter.com/a/status/1'
+
+    assert_equal ['https://vxtwitter.com/a/status/1'], LinkFixer.fix(message)
+  end
+
   def test_does_not_wrap_links_in_spoilers_without_markers
     message = 'https://twitter.com/a/status/1'
 
