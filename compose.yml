@@ -13,6 +13,8 @@ services:
       DISCORDRB_NONACL: true # makes it shut up about missign libsodium
       DB_PATH: /app/db/messages.db
       HEALTHCHECK_PORT: 8080
+      RETENTION_DAYS:
+      WATCHDOG_GRACE_SECONDS:
     volumes:
       - db:/app/db
     restart: unless-stopped
