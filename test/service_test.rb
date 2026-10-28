@@ -19,4 +19,24 @@ class ServiceTest < Minitest::Test
 
     assert_nil result
   end
+
+  def test_subclasses_can_override_rewrite
+    assert_equal 'https://override.example/path',
+                 override_service.fix_link(URI.parse('https://override.invalid/path?tracking=1'))
+  end
+
+  private
+
+  def override_service
+    Class.new(Service) do
+      const_set(:HOST_REGEX, /\Aoverride\.invalid\z/)
+      const_set(:REPLACEMENT_HOST, 'override.example')
+
+      def self.rewrite(uri)
+        rewritten = super
+        rewritten.query = nil
+        rewritten
+      end
+    end
+  end
 end
