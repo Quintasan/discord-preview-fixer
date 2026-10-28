@@ -24,7 +24,7 @@ RETENTION_SECONDS = Integer(ENV.fetch('RETENTION_DAYS', 30)) * 24 * 60 * 60
 # more than a small slice of the table, however large the table gets.
 PRUNE_INTERVAL = 60 * 60
 
-HANDLERS = Handlers.new(logger: LOGGER, sentry: Sentry)
+HANDLERS = Handlers.new(logger: LOGGER, sentry: Sentry, retention_seconds: RETENTION_SECONDS)
 
 BOT.message(contains: LinkFixer::HTTP_REGEX) do |event|
   HANDLERS.on_message(event)

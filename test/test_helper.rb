@@ -11,6 +11,7 @@ ENV['DB_PATH'] = ':memory:'
 
 require 'services'
 require 'link_fixer'
+require 'reply_content'
 require 'message_schema'
 require 'message'
 require 'pruner'
