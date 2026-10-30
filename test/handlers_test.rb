@@ -47,8 +47,10 @@ class HandlersTest < Minitest::Test
   end
 
   class FakeMessage
+    SUPPRESS_EMBEDS = 1 << 2
+
     attr_reader :content, :author, :id, :suppress_calls
-    attr_accessor :timestamp
+    attr_accessor :timestamp, :flags
 
     def initialize(content:, id: 1000, display_name: 'tester', suppress_error: nil, bot_account: false)
       @content = content
@@ -57,12 +59,22 @@ class HandlersTest < Minitest::Test
       @suppress_error = suppress_error
       @suppress_calls = 0
       @timestamp = Time.now
+      @flags = 0
     end
 
+    # Mirrors discordrb: the PATCH returns a new message carrying the flag, and
+    # the receiver keeps its old flags.
     def suppress_embeds
       @suppress_calls += 1
       raise @suppress_error if @suppress_error
+
+      echo = self.class.new(content: @content, id: @id, display_name: @author.display_name,
+                            bot_account: @author.bot_account)
+      echo.flags = @flags | SUPPRESS_EMBEDS
+      echo
     end
+
+    def suppress_embeds? = @flags.anybits?(SUPPRESS_EMBEDS)
   end
 
   class FakeMessageEvent
@@ -429,6 +441,23 @@ class HandlersTest < Minitest::Test
     @handlers.on_message_edit(event)
 
     assert_equal 1, message.suppress_calls
+  end
+
+  # The suppress PATCH echoes back as a message update carrying the flag and
+  # authored by the original author, so re-suppressing it would feed itself
+  # forever at the per-channel edit rate limit.
+  def test_does_not_suppress_again_when_its_own_echo_comes_back
+    message = FakeMessage.new(content: 'see https://twitter.com/a/status/1')
+    @handlers.on_message(FakeMessageEvent.new(message:))
+    echo = FakeMessage.new(content: message.content)
+    echo.flags = FakeMessage::SUPPRESS_EMBEDS
+    event = FakeMessageEvent.new(message: echo)
+
+    @handlers.on_message_edit(event)
+
+    assert_equal 1, message.suppress_calls
+    assert_equal 0, echo.suppress_calls
+    assert_equal [[2000, 'https://vxtwitter.com/a/status/1']], event.channel.edited
   end
 
   def test_does_not_resuppress_embeds_when_an_edit_removes_the_link

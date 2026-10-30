@@ -37,8 +37,9 @@ Dispatch walks `Service.subclasses`, so a new service must not match a host anot
   outright, so a second reply is never posted and the surviving reply stays even if the link is gone.
 - The bot suppresses the original message's embeds and replies with each distinct fixed link, one per
   line. Reply mentions are disabled (`replied_user: false`), so fixing a link never pings its author.
-- Editing the original re-suppresses its embeds and re-syncs the reply: a changed link edits the reply
-  in place, removing the link deletes the reply and its record, and adding one posts a reply.
+- Editing the original re-syncs the reply, suppressing its embeds only when the flag is not already
+  set: a changed link edits the reply in place, removing the link deletes the reply and its record,
+  and adding one posts a reply.
 - Deleting the original deletes the fixed reply and its record; deleting the fixed reply drops the
   orphaned record.
 - If the fixed reply no longer exists when an edit tries to update it, the record is dropped and a new
@@ -55,6 +56,13 @@ so the reply is never empty. A record is still written for a truncated reply.
 
 ## Invariants
 
+- Embed suppression is idempotent: the bot sends at most one suppress PATCH per original message.
+  That PATCH echoes back as `MESSAGE_UPDATE`, and the event carries the message *author* (a human),
+  never the actor, so `ignored?` cannot filter it and the edit handler re-enters. `suppress_embeds`
+  sends only `{"flags":4}` — content is untouched and a repeat is a no-op Discord still echoes — and
+  `Discordrb::Message#suppress_embeds` has no idempotency check, so an unguarded second call makes
+  every fixed message re-suppress itself forever at the per-channel edit rate limit. Guard on
+  `Message#suppress_embeds?`.
 - `fixed_message_id` always refers to the bot's reply and survives edits, so the record never needs
   re-pointing.
 - Reply, edit, and delete failures are logged (and unexpected ones reported to Sentry) but never raise

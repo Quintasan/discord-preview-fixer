@@ -26,7 +26,12 @@ module HandlerSupport
     event.message.author.bot_account?
   end
 
+  # Suppression is idempotent on purpose: the PATCH echoes back as a message
+  # update authored by the original author, so suppressing on edit would make
+  # every fixed message re-suppress itself.
   def suppress_embeds(message)
+    return if message.suppress_embeds?
+
     message.suppress_embeds
   rescue StandardError => e
     @logger.warn('Failed to suppress embeds', error: e.message)
