@@ -101,13 +101,14 @@ class HandlersTest < Minitest::Test
   class FakeChannel
     attr_reader :deleted, :edited, :id
 
-    def initialize(id: 3000, error: nil, load_error: nil, edit_error: nil)
+    def initialize(id: 3000, error: nil, load_error: nil, edit_error: nil, load_missing: false)
       @id = id
       @deleted = []
       @edited = []
       @error = error
       @load_error = load_error
       @edit_error = edit_error
+      @load_missing = load_missing
     end
 
     def delete_message(id)
@@ -116,8 +117,10 @@ class HandlersTest < Minitest::Test
       @deleted << id
     end
 
+    # discordrb returns nil for a message that is gone, rather than raising.
     def load_message(id)
       raise @load_error if @load_error
+      return nil if @load_missing
 
       FakeLoadedMessage.new(id: id, channel: self, edit_error: @edit_error)
     end
@@ -493,7 +496,31 @@ class HandlersTest < Minitest::Test
     assert @logger.logged?(:warn, 'Truncated fixed link to message limit')
   end
 
-  def test_reposts_when_the_fixed_reply_was_deleted
+  def test_does_not_post_or_edit_when_the_fixed_reply_is_gone
+    Message.create(original_message_id: 1000, fixed_message_id: 2000)
+    channel = FakeChannel.new(load_missing: true)
+    message = FakeMessage.new(content: 'https://twitter.com/a/status/1')
+    event = FakeMessageEvent.new(message:, channel:)
+
+    @handlers.on_message_edit(event)
+
+    assert_empty event.responses
+    assert_empty channel.edited
+  end
+
+  def test_forgets_the_record_when_the_fixed_reply_is_gone
+    Message.create(original_message_id: 1000, fixed_message_id: 2000)
+    channel = FakeChannel.new(load_missing: true)
+    message = FakeMessage.new(content: 'https://twitter.com/a/status/1')
+    event = FakeMessageEvent.new(message:, channel:)
+
+    @handlers.on_message_edit(event)
+
+    assert_nil Message.first(original_message_id: 1000)
+    assert @logger.logged?(:info, 'Fixed link message is gone; forgetting it')
+  end
+
+  def test_forgets_the_record_when_the_edit_races_a_deletion
     Message.create(original_message_id: 1000, fixed_message_id: 2000)
     channel = FakeChannel.new(load_error: Discordrb::Errors::UnknownMessage.new('Unknown Message'))
     message = FakeMessage.new(content: 'https://twitter.com/a/status/1')
@@ -501,9 +528,9 @@ class HandlersTest < Minitest::Test
 
     @handlers.on_message_edit(event)
 
-    assert_equal ['https://vxtwitter.com/a/status/1'], event.responses
-    assert_equal 2000, Message.first(original_message_id: 1000).fixed_message_id
-    assert @logger.logged?(:info, 'Fixed link message is gone; posting a new one')
+    assert_empty event.responses
+    assert_nil Message.first(original_message_id: 1000)
+    assert @logger.logged?(:info, 'Fixed link message is gone; forgetting it')
   end
 
   def test_serializes_concurrent_messages_for_the_same_id

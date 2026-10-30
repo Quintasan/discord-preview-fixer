@@ -81,19 +81,24 @@ class Handlers
 
   def update_fixed_reply(event, record, fixed_links)
     reply_content = ReplyContent.build(fixed_links, message_id: record.original_message_id, logger: @logger)
-    event.channel.load_message(record.fixed_message_id).edit(reply_content)
+    fixed_message = event.channel.load_message(record.fixed_message_id)
+    return forget_fixed_reply(record) unless fixed_message
+
+    fixed_message.edit(reply_content)
     @logger.info('Updated fixed link', fixed_message_id: record.fixed_message_id, fixed_link: reply_content)
   rescue Discordrb::Errors::UnknownMessage
-    repost_fixed_reply(event, record, fixed_links)
+    forget_fixed_reply(record)
   rescue StandardError => e
     @logger.error('Failed to update fixed link', error: e.message)
     @sentry.capture_exception(e) unless expected_error?(e)
   end
 
-  def repost_fixed_reply(event, record, fixed_links)
-    @logger.info('Fixed link message is gone; posting a new one', original_message_id: record.original_message_id)
+  # The reply is gone: an admin removed it, or the original's deletion was
+  # missed. Stop tracking it; `load_message` reports a missing message as nil,
+  # so chaining `.edit` would raise NoMethodError instead of reaching the rescue.
+  def forget_fixed_reply(record)
+    @logger.info('Fixed link message is gone; forgetting it', original_message_id: record.original_message_id)
     record.destroy
-    post_fixed_reply(event, fixed_links)
   end
 
   def reply(event, reply_content)

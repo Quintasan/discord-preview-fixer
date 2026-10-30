@@ -42,8 +42,11 @@ Dispatch walks `Service.subclasses`, so a new service must not match a host anot
   and adding one posts a reply.
 - Deleting the original deletes the fixed reply and its record; deleting the fixed reply drops the
   orphaned record.
-- If the fixed reply no longer exists when an edit tries to update it, the record is dropped and a new
-  reply is posted.
+- If the fixed reply no longer exists when an edit tries to update it, the record is dropped and
+  nothing is posted: an admin removed the reply, or the original's deletion was missed. Dropping is
+  not remembered, so a later edit that still carries the link posts a new reply. `Channel#load_message`
+  reports a missing message as `nil` rather than raising, so the missing case must be checked before
+  chaining `.edit`.
 - Messages authored by bots, including this one, are ignored so bot-to-bot traffic cannot loop.
 - Event handling is serialized, so a create and an edit racing on the same message cannot post two
   replies.
