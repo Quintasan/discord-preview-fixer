@@ -26,11 +26,17 @@ read_if: Navigating the codebase, locating a link service, or deciding where new
 - `compose.yml` — Ditto
 - `.env.example` — Ditto
 - `.editorconfig`, `.gitignore`, `.infisical.json` — Ditto
-- `.mcp.json`, `.pi/mcp.json` — Ditto
+- `.mcp.json` — Ditto
 - `coverage/` — Generated SimpleCov output; gitignored.
 - `.github/workflows/minitest.yml` — CI gate: tests then RuboCop, plus a no-push Docker build.
 - `.github/workflows/build-docker-image.yml` — Tag-triggered GHCR build; asserts the tag matches `compose.yml` before building.
 - `.github/dependabot.yml` — Weekly Bundler, GitHub Actions, and Docker updates.
+
+### `.pi/` — Pi harness configuration
+
+- `mcp.json` — Ditto
+- `skills/release-update/SKILL.md` — Procedure for a dependency refresh (Ruby patch pin, `bundle update`, Action re-pins as separate commits) followed by a minor release, stopping before push.
+- `skills/release-update/scripts/upstream.sh` — Newest stable Ruby patch for a given minor (prereleases filtered).
 
 ### `lib/` — Bot logic and link-service definitions
 
