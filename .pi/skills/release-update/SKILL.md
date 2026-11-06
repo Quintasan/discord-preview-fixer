@@ -102,6 +102,13 @@ All four checks must pass on the updated tree:
 - `docker build --tag discord-preview-fixer:ci .` (CI builds this, so catch it locally)
 - the working tree is clean
 
+This workstation has no Docker daemon, and the rootless Podman fallback cannot create
+containers here (`mount proc: Operation not permitted`), so the image build is not locally
+runnable. When that is still true, run the other three checks, then state plainly in the report
+that the image was not built locally and that `.github/workflows/minitest.yml`'s `docker` job and
+the tag-triggered publish run are the only proof. Do not substitute a Dockerfile edited for
+`docker.io/library/...` — that verification is fake.
+
 ## Commit 4 — Minor release
 
 1. Take the current version from `compose.yml` (e.g. `v1.8.2`). Next minor is
