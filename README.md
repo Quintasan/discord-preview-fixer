@@ -4,7 +4,7 @@ This is a simple Discord bot that scans messages for links to supported services
 
 | Service  | Replacement   | Notes                                                  |
 |----------|---------------|--------------------------------------------------------|
-| Twitter  | vxtwitter.com | Also converts x.com and mobile.twitter.com links       |
+| Twitter  | vxtwitter.com | Also converts x.com and mobile.twitter.com links; only post (status) links are expanded |
 | Pixiv    | phixiv.net    |                                                        |
 | Reddit   | rxddit.com    | Also converts old/new/np/i.reddit.com links            |
 | AmiAmi   | figurki.harvestasha.org    |                                            |

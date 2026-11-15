@@ -45,6 +45,16 @@ class LinkFixerTest < Minitest::Test
     assert_empty LinkFixer.fix('https://example.com/page')
   end
 
+  def test_returns_empty_for_twitter_profile_links
+    assert_empty LinkFixer.fix('https://twitter.com/cutesexyrobutts')
+  end
+
+  def test_skips_twitter_profile_link_but_fixes_post_link
+    message = 'https://x.com/user and https://x.com/user/status/123'
+
+    assert_equal ['https://vxtwitter.com/user/status/123'], LinkFixer.fix(message)
+  end
+
   def test_wraps_links_in_spoilers_when_message_has_spoiler_markers
     message = '|| https://twitter.com/a/status/1 ||'
 
@@ -89,9 +99,9 @@ class LinkFixerTest < Minitest::Test
   end
 
   def test_fixes_links_outside_code
-    message = '`https://twitter.com/code/1` https://twitter.com/real/1'
+    message = '`https://twitter.com/code/status/2` https://twitter.com/real/status/1'
 
-    assert_equal ['https://vxtwitter.com/real/1'], LinkFixer.fix(message)
+    assert_equal ['https://vxtwitter.com/real/status/1'], LinkFixer.fix(message)
   end
 
   def test_continues_after_an_unmatched_code_marker

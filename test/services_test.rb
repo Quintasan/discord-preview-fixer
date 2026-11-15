@@ -39,7 +39,23 @@ class ServicesTest < Minitest::Test
     [Tiktok, 'https://vm.tiktok.com/ZMeXxxxxx/', 'https://tnktok.com/ZMeXxxxxx/'],
     [Tiktok, 'https://tiktok.com/@username/video/1234567890123456789',
      'https://tnktok.com/@username/video/1234567890123456789'],
-    [Tiktok, 'https://vt.tiktok.com/ZMeXxxxxx/', 'https://tnktok.com/ZMeXxxxxx/']
+    [Tiktok, 'https://vt.tiktok.com/ZMeXxxxxx/', 'https://tnktok.com/ZMeXxxxxx/'],
+    [Twitter, 'https://twitter.com/user/status/1/photo/1',
+     'https://vxtwitter.com/user/status/1/photo/1'],
+    [Twitter, 'https://x.com/i/web/status/1', 'https://vxtwitter.com/i/web/status/1'],
+    [Twitter, 'https://twitter.com/user/statuses/1', 'https://vxtwitter.com/user/statuses/1']
+  ].freeze
+
+  # service, source URL. The link is recognized but deliberately not expanded.
+  IGNORED = [
+    [Twitter, 'https://twitter.com/cutesexyrobutts'],
+    [Twitter, 'https://x.com/cutesexyrobutts/'],
+    [Twitter, 'https://twitter.com/cutesexyrobutts?s=20'],
+    [Twitter, 'https://mobile.twitter.com/cutesexyrobutts/media'],
+    [Twitter, 'https://twitter.com/cutesexyrobutts/likes'],
+    [Twitter, 'https://twitter.com/hashtag/art'],
+    [Twitter, 'https://twitter.com/search?q=art'],
+    [Twitter, 'https://twitter.com/i/lists/1']
   ].freeze
 
   def test_rewrites_supported_urls
@@ -53,6 +69,12 @@ class ServicesTest < Minitest::Test
       actual = service.fix_link(URI.parse('https://example.com/page'))
 
       assert_nil actual, "#{service.name} matched an unrelated host"
+    end
+  end
+
+  def test_ignores_profile_and_non_post_urls
+    IGNORED.each do |service, source|
+      assert_nil service.fix_link(URI.parse(source)), "expanded #{source}"
     end
   end
 
