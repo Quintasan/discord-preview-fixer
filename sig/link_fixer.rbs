@@ -1,0 +1,35 @@
+class LinkFixer
+  HTTP_REGEX: Regexp
+
+  TRAILING_PUNCTUATION: Regexp
+
+  @message: String
+
+  @spoiler_spans: Array[Range[Integer]]
+
+  @code_spans: Array[Range[Integer]]
+
+  def self.fix: (untyped message) -> Array[String]
+
+  def initialize: (untyped message) -> void
+
+  def fix: () -> Array[String]
+
+  private
+
+  def extract_links: () -> Array[[URI::Generic, bool]]
+
+  def fix_uri: (URI::Generic uri) -> String?
+
+  def deduplicate: (Array[[String, bool]] links) -> Array[[String, bool]]
+
+  def inside_spoiler?: (Integer offset) -> bool
+
+  def inside_code?: (Integer offset) -> bool
+
+  def spans: (String delimiter) -> Array[Range[Integer]]
+
+  def code_spans: () -> Array[Range[Integer]]
+
+  def append_span: (Array[Range[Integer]] ranges, Integer open, String delimiter) -> Integer
+end

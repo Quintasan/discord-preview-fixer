@@ -2,7 +2,10 @@
 
 class Service
   def self.fix_link(uri)
-    return unless uri.host.match?(self::HOST_REGEX)
+    # Only absolute http(s) links reach a service, so a host is always present.
+    # @type var host: String
+    host = uri.host
+    return unless host.match?(self::HOST_REGEX)
 
     rewrite(uri.dup).to_s
   end

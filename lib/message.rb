@@ -25,7 +25,10 @@ class Message < Sequel::Model(:messages)
   # left in place: retention bounds what the bot remembers, and edits to messages
   # older than the window are ignored, so no reply ever has to be resolved.
   def self.prune(older_than:)
+    # Sequel's where block runs against a virtual row, which has no signature.
+    # steep:ignore:start
     where { created_at < older_than }.delete
+    # steep:ignore:end
   end
 
   # Databases created before created_at existed have no column default.

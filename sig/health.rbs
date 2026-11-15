@@ -1,0 +1,38 @@
+# Minimal HTTP server used for container health checks.
+class HealthServer
+  DEFAULT_PORT: Integer
+
+  READ_TIMEOUT: Integer
+
+  @bot: _ConnectedBot
+
+  @logger: untyped
+
+  @port: Integer
+
+  @tcp_server: TCPServer
+
+  @thread: Thread?
+
+  def self.start: (bot: _ConnectedBot, logger: untyped, ?port: String | Integer) -> HealthServer
+
+  def initialize: (bot: _ConnectedBot, logger: untyped, port: String | Integer) -> void
+
+  def start: () -> HealthServer
+
+  def port: () -> Integer
+
+  def stop: () -> void
+
+  private
+
+  def serve: () -> void
+
+  def handle: (TCPSocket client) -> void
+
+  def readable?: (TCPSocket client) -> boolish
+
+  def response_for: (String? request_line) -> String
+
+  def response: (Integer status, String reason, String body) -> String
+end

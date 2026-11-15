@@ -11,7 +11,7 @@ require_relative 'reply_content'
 class Handlers
   include HandlerSupport
 
-  ALLOWED_MENTIONS = { parse: [], replied_user: false }.freeze
+  ALLOWED_MENTIONS = { parse: [], replied_user: false }.freeze # steep:ignore UnannotatedEmptyCollection
 
   def initialize(logger:, sentry:, retention_seconds:)
     @logger = logger

@@ -17,6 +17,8 @@ jobs:
         run: bundle exec rake
       - name: Run RuboCop
         run: bundle exec rubocop
+      - name: Run type checks
+        run: bundle exec rake typecheck
   docker:
     runs-on: ubuntu-24.04
     steps:

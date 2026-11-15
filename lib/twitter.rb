@@ -12,6 +12,7 @@ class Twitter < Service
   POST_PATH = %r{\A/(?:[^/]+|i/web)/status(?:es)?/\d+}
 
   def self.fix_link(uri)
+    # @type var path: String
     path = uri.path
     return unless POST_PATH.match?(path)
 

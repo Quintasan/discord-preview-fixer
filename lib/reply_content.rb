@@ -16,6 +16,7 @@ class ReplyContent
   end
 
   def build
+    # @type var accepted: Array[String]
     accepted = []
     dropped = 0
     @fixed_links.each do |link|
@@ -42,7 +43,9 @@ class ReplyContent
   end
 
   def truncate(accepted, link)
-    accepted << link[0, MESSAGE_LIMIT]
+    # @type var prefix: String
+    prefix = link[0, MESSAGE_LIMIT]
+    accepted << prefix
     @logger.warn('Truncated fixed link to message limit', message_id: @message_id)
     :added
   end

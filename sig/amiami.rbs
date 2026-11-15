@@ -1,0 +1,4 @@
+class AmiAmi < Service
+  HOST_REGEX: Regexp
+  REPLACEMENT_HOST: String
+end

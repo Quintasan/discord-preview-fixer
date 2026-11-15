@@ -1,0 +1,63 @@
+# Structural types for the outside objects this bot touches. They describe the
+# methods the code actually calls, so the real discordrb objects and the fake
+# events in test/ both fit.
+interface _MessageAuthor
+  def display_name: () -> String
+
+  def bot_account?: () -> bool
+end
+
+interface _DiscordMessage
+  def id: () -> Integer
+
+  def content: () -> String
+
+  def author: () -> _MessageAuthor
+
+  def timestamp: () -> Time
+
+  def suppress_embeds?: () -> bool
+
+  def suppress_embeds: () -> void
+
+  def edit: (String content, ?untyped allowed_mentions) -> void
+end
+
+interface _DiscordChannel
+  def id: () -> Integer
+
+  def load_message: (Integer message_id) -> _DiscordMessage?
+
+  def delete_message: (Integer message_id) -> void
+end
+
+interface _MessageEvent
+  def message: () -> _DiscordMessage
+
+  def channel: () -> _DiscordChannel
+
+  def respond: (String content, ?bool tts, ?untyped embed, ?untyped attachments, ?untyped allowed_mentions, ?untyped reply_to) -> _DiscordMessage
+end
+
+interface _MessageDeleteEvent
+  def id: () -> Integer
+
+  def channel: () -> _DiscordChannel
+end
+
+interface _ConnectedBot
+  def connected?: () -> bool
+end
+
+interface _ErrorReporter
+  def capture_exception: (untyped exception) -> void
+end
+
+# A tracked original/fixed message pair, as returned by Message.first.
+interface _MessageRecord
+  def original_message_id: () -> Integer
+
+  def fixed_message_id: () -> Integer
+
+  def destroy: () -> void
+end

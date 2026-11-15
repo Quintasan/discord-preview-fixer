@@ -1,0 +1,20 @@
+# Shared behavior for Handlers. Handlers supplies @mutex, @logger, and @sentry.
+module HandlerSupport
+  EXPECTED_ERRORS: Array[singleton(Exception)]
+
+  @mutex: Thread::Mutex
+
+  @logger: untyped
+
+  @sentry: _ErrorReporter
+
+  private
+
+  def guard: (String context) { () -> void } -> void
+
+  def expected_error?: (Exception error) -> bool
+
+  def ignored?: (_MessageEvent event) -> bool
+
+  def suppress_embeds: (_DiscordMessage message) -> void
+end

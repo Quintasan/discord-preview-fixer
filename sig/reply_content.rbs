@@ -1,0 +1,26 @@
+# Fits fixed links into one Discord message.
+class ReplyContent
+  MESSAGE_LIMIT: Integer
+
+  @fixed_links: Array[String]
+
+  @message_id: Integer
+
+  @logger: untyped
+
+  def self.build: (Array[String] fixed_links, message_id: Integer, logger: untyped) -> String
+
+  def initialize: (Array[String] fixed_links, message_id: Integer, logger: untyped) -> void
+
+  def build: () -> String
+
+  private
+
+  def add: (Array[String] accepted, String link) -> (:added | :dropped)
+
+  def fits?: (Array[String] accepted, String link) -> bool
+
+  def truncate: (Array[String] accepted, String link) -> :added
+
+  def log_dropped: (Integer dropped) -> void
+end

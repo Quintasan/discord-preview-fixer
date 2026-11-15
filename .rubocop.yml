@@ -3,8 +3,14 @@ plugins:
   - rubocop-rake
   - rubocop-sequel
 
+inherit_mode:
+  merge:
+    - Include
+
 AllCops:
   NewCops: enable
+  Include:
+    - 'Steepfile'
 
 Style/HashSyntax:
   EnforcedShorthandSyntax: consistent

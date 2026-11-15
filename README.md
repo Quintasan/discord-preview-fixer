@@ -76,3 +76,12 @@ deleted while the bot was offline stay in their channels, and an edit to a messa
 
 `.env` is loaded before Sentry and the database are initialized, so `SENTRY_DSN` and `DB_PATH` can be
 set there for manual installs.
+
+## Type signatures
+
+The RBS signatures for `lib/` live in `sig/`. `sig/external.rbs` holds narrow stand-ins for the gems
+that ship no signatures (`discordrb`, `sequel`, `sentry-ruby`), and `sig/interfaces.rbs` describes the
+Discord objects the code calls, so both real objects and the fakes in `test/` fit.
+
+`bundle exec rake typecheck` validates the signatures with `rbs validate` and type-checks `lib/` with
+`steep check`. CI runs it after RuboCop. `main.rb` (top-level wiring) and `test/` are not checked yet.
