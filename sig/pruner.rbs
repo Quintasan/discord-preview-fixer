@@ -1,0 +1,5 @@
+# Retention policy: forget message pairs past the window, never delete them
+# from Discord.
+class Pruner
+  def self.run: (older_than: Time older_than) -> Integer
+end

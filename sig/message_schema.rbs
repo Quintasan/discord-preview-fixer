@@ -1,0 +1,24 @@
+# Owns the messages table layout, including the one-time migration of databases
+# created before created_at, channel_id, or the fixed_message_id or created_at
+# indexes existed.
+class MessageSchema
+  FIXED_MESSAGE_ID_INDEX: Symbol
+
+  CREATED_AT_INDEX: Symbol
+
+  def self.install: (untyped db) -> void
+
+  private
+
+  def self.create_messages_table: (untyped db) -> void
+
+  def self.backfill_created_at: (untyped db) -> void
+
+  def self.add_channel_id: (untyped db) -> void
+
+  def self.add_fixed_message_id_index: (untyped db) -> void
+
+  def self.add_created_at_index: (untyped db) -> void
+
+  def self.columns: (untyped db) -> Array[Symbol]
+end

@@ -4,7 +4,7 @@ This is a simple Discord bot that scans messages for links to supported services
 
 | Service  | Replacement   | Notes                                                  |
 |----------|---------------|--------------------------------------------------------|
-| Twitter  | vxtwitter.com | Also converts x.com and mobile.twitter.com links       |
+| Twitter  | vxtwitter.com | Also converts x.com and mobile.twitter.com links; only post (status) links are expanded |
 | Pixiv    | phixiv.net    |                                                        |
 | Reddit   | rxddit.com    | Also converts old/new/np/i.reddit.com links            |
 | AmiAmi   | figurki.harvestasha.org    |                                            |
@@ -76,3 +76,12 @@ deleted while the bot was offline stay in their channels, and an edit to a messa
 
 `.env` is loaded before Sentry and the database are initialized, so `SENTRY_DSN` and `DB_PATH` can be
 set there for manual installs.
+
+## Type signatures
+
+The RBS signatures for `lib/` live in `sig/`. `sig/external.rbs` holds narrow stand-ins for the gems
+that ship no signatures (`discordrb`, `sequel`, `sentry-ruby`), and `sig/interfaces.rbs` describes the
+Discord objects the code calls, so both real objects and the fakes in `test/` fit.
+
+`bundle exec rake typecheck` validates the signatures with `rbs validate` and type-checks `lib/` with
+`steep check`. CI runs it after RuboCop. `main.rb` (top-level wiring) and `test/` are not checked yet.

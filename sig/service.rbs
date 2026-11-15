@@ -1,0 +1,11 @@
+# Every supported link service subclasses Service and defines HOST_REGEX and
+# REPLACEMENT_HOST; a subclass may override rewrite to adjust the path or query.
+class Service
+  HOST_REGEX: Regexp
+
+  REPLACEMENT_HOST: String
+
+  def self.fix_link: (URI::Generic uri) -> String?
+
+  def self.rewrite: (URI::Generic uri) -> URI::Generic
+end

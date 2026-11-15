@@ -1,0 +1,9 @@
+# The tracked original/fixed message pair. created_at is set explicitly because
+# databases created before that column existed have no column default.
+class Message < Sequel::Model
+  def self.record: (original_message_id: Integer, fixed_message_id: Integer, ?channel_id: Integer?) -> void
+
+  def self.prune: (older_than: Time older_than) -> Integer
+
+  def before_create: () -> void
+end

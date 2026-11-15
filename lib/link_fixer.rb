@@ -17,6 +17,7 @@ class LinkFixer
   end
 
   def fix
+    # @type var links: Array[[String, bool]]
     links = extract_links.filter_map do |uri, spoiler|
       fixed = fix_uri(uri)
       [fixed, spoiler] if fixed
@@ -30,7 +31,9 @@ class LinkFixer
 
   def extract_links
     @message.to_enum(:scan, HTTP_REGEX).filter_map do
+      # @type var match: MatchData
       match = Regexp.last_match
+      # @type var start: Integer
       start = match.begin(0)
       next if inside_code?(start)
 
@@ -41,7 +44,9 @@ class LinkFixer
   end
 
   def fix_uri(uri)
-    Service.subclasses.lazy.filter_map { |service| service.fix_link(uri) }.first
+    # @type var services: Array[singleton(Service)]
+    services = Service.subclasses
+    services.lazy.filter_map { |service| service.fix_link(uri) }.first
   end
 
   # A fixed link is spoilered if any occurrence of it was spoilered, so a
@@ -65,6 +70,7 @@ class LinkFixer
   # Pairs delimiters left to right. An unmatched delimiter starts no span and
   # is skipped, so a later pair is still recognized.
   def spans(delimiter)
+    # @type var ranges: Array[Range[Integer]]
     ranges = []
     position = 0
     while (open = @message.index(delimiter, position))
@@ -76,10 +82,14 @@ class LinkFixer
   # Code spans pair runs of backticks, so inline code, multi-backtick code, and
   # fenced blocks all work. A run without a matching close starts no span.
   def code_spans
+    # @type var ranges: Array[Range[Integer]]
     ranges = []
     position = 0
+    # @type var run: MatchData
     while (run = @message.match(/`+/, position))
-      position = append_span(ranges, run.begin(0), run[0])
+      # @type var open: Integer
+      open = run.begin(0)
+      position = append_span(ranges, open, run[0])
     end
     ranges
   end

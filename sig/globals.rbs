@@ -1,0 +1,2 @@
+# The Sequel database handle, assigned at the top level of lib/message.rb.
+DB: untyped

@@ -1,0 +1,7 @@
+class Twitter < Service
+  HOST_REGEX: Regexp
+  REPLACEMENT_HOST: String
+  POST_PATH: Regexp
+
+  def self.fix_link: (URI::Generic uri) -> String?
+end

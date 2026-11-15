@@ -486,7 +486,7 @@ class HandlersTest < Minitest::Test
   end
 
   def test_truncates_a_single_link_longer_than_the_message_limit
-    long_link = "https://twitter.com/user/#{'a' * 2500}"
+    long_link = "https://twitter.com/user/status/#{'1' * 2500}"
     message = FakeMessage.new(content: long_link)
     event = FakeMessageEvent.new(message:)
 

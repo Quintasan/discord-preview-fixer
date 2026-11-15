@@ -1,0 +1,55 @@
+# Minimal stand-ins for the gems this project uses that ship no RBS of their
+# own: discordrb (only its error classes are referenced by name), sequel (only
+# the model API this bot calls), and sentry-ruby. They are deliberately narrow:
+# anything outside these declarations stays untyped, so Steep never claims more
+# than this file says. gem_rbs_collection has no signatures for sequel or
+# discordrb, so a collection install would not replace these.
+module Discordrb
+  module Errors
+    class NoPermission < StandardError
+    end
+
+    class UnknownMessage < StandardError
+    end
+  end
+end
+
+module Sequel
+  CURRENT_TIMESTAMP: untyped
+
+  def self.sqlite: (String path) -> untyped
+
+  # The table name is fixed in the class body, so Message subclasses this class
+  # rather than the class returned by Sequel.Model.
+  def self.Model: (Symbol table) -> singleton(Model)
+
+  class Model
+    def self.first: (**untyped conditions) -> untyped
+
+    def self.dataset: () -> untyped
+
+    def self.where: (**untyped conditions) -> untyped
+
+    attr_reader id: Integer
+    attr_reader original_message_id: Integer
+    attr_reader fixed_message_id: Integer
+    attr_reader channel_id: Integer?
+    attr_accessor created_at: Time
+
+    def destroy: () -> void
+
+    def before_create: () -> void
+  end
+end
+
+# Steep drops the required port argument of `TCPServer#initialize` in files that
+# require a library, so this declares the arity lib/health.rb calls.
+class TCPServer
+  def self.new: (String host, Integer port) -> instance
+end
+
+module Sentry
+  def self.init: () { (untyped config) -> void } -> void
+
+  def self.capture_exception: (untyped exception) -> void
+end

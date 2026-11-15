@@ -1,0 +1,43 @@
+# Discord event handlers, extracted from main.rb so they can be unit-tested
+# with fake event objects instead of a live bot.
+class Handlers
+  include HandlerSupport
+
+  ALLOWED_MENTIONS: Hash[Symbol, untyped]
+
+  @mutex: Thread::Mutex
+
+  @logger: untyped
+
+  @sentry: _ErrorReporter
+
+  @retention_seconds: Integer
+
+  def initialize: (logger: untyped, sentry: _ErrorReporter, retention_seconds: Integer) -> void
+
+  def on_message: (_MessageEvent event) -> void
+
+  def on_message_edit: (_MessageEvent event) -> void
+
+  def on_message_delete: (_MessageDeleteEvent event) -> void
+
+  private
+
+  def forgotten?: (_DiscordMessage message) -> bool
+
+  def update_for_edit: (_MessageEvent event) -> void
+
+  def post_fixed_reply: (_MessageEvent event, Array[String] fixed_links) -> void
+
+  def update_fixed_reply: (_MessageEvent event, _MessageRecord record, Array[String] fixed_links) -> void
+
+  def forget_fixed_reply: (_MessageRecord record) -> void
+
+  def reply: (_MessageEvent event, String reply_content) -> void
+
+  def discard_fixed_reply: (_DiscordChannel channel, _MessageRecord? record, event: String) -> void
+
+  def delete_fixed_reply: (_DiscordChannel channel, _MessageRecord record) -> void
+
+  def destroy_orphaned_record: (_MessageDeleteEvent event) -> void
+end
