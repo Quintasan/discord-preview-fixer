@@ -34,7 +34,8 @@ module Sequel
     attr_reader original_message_id: Integer
     attr_reader fixed_message_id: Integer
     attr_reader channel_id: Integer?
-    attr_accessor created_at: Time
+    # Written as UTC text so it does not carry the host zone; read back as a Time.
+    attr_accessor created_at: (Time | String)
 
     def destroy: () -> void
 

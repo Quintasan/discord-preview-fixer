@@ -29,7 +29,7 @@ class MessageSchemaTest < Minitest::Test
 
     MessageSchema.install(db)
 
-    refute_nil db[:messages].first[:created_at]
+    assert_match(/\A\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{6} \+0000\z/, stored_created_at(db))
   end
 
   def test_adds_channel_id_to_a_legacy_database
@@ -67,6 +67,10 @@ class MessageSchemaTest < Minitest::Test
   end
 
   private
+
+  def stored_created_at(db)
+    db.fetch('select cast(created_at as text) as value from messages').first[:value]
+  end
 
   # The table shape from before created_at, channel_id, and the
   # fixed_message_id and created_at indexes existed.

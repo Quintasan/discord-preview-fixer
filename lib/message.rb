@@ -17,23 +17,26 @@ class Message < Sequel::Model(:messages)
       original_message_id: original_message_id,
       fixed_message_id: fixed_message_id,
       channel_id: channel_id,
-      created_at: Time.now
+      created_at: MessageSchema.timestamp
     )
   end
 
   # Forgets records past the retention window. The fixed reply is deliberately
   # left in place: retention bounds what the bot remembers, and edits to messages
   # older than the window are ignored, so no reply ever has to be resolved.
+  # The cutoff is formatted like a stored value, so the comparison is a plain
+  # string test of two UTC timestamps.
   def self.prune(older_than:)
+    cutoff = MessageSchema.timestamp(older_than)
     # Sequel's where block runs against a virtual row, which has no signature.
     # steep:ignore:start
-    where { created_at < older_than }.delete
+    where { created_at < cutoff }.delete
     # steep:ignore:end
   end
 
   # Databases created before created_at existed have no column default.
   def before_create
-    self.created_at ||= Time.now
+    self.created_at ||= MessageSchema.timestamp
     super
   end
 end

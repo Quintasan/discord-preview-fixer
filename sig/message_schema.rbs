@@ -6,7 +6,11 @@ class MessageSchema
 
   CREATED_AT_INDEX: Symbol
 
+  TIMESTAMP_FORMAT: String
+
   def self.install: (untyped db) -> void
+
+  def self.timestamp: (?Time at) -> String
 
   private
 

@@ -8,6 +8,7 @@ require 'sequel'
 class MessageSchema
   FIXED_MESSAGE_ID_INDEX = :messages_fixed_message_id_index
   CREATED_AT_INDEX = :messages_created_at_index
+  TIMESTAMP_FORMAT = '%Y-%m-%d %H:%M:%S.%6N +0000'
 
   class << self
     def install(db)
@@ -16,6 +17,13 @@ class MessageSchema
       add_channel_id(db)
       add_fixed_message_id_index(db)
       add_created_at_index(db)
+    end
+
+    # The one shape created_at is written in. Every stored value is UTC text of
+    # the same length, so the retention cutoff compares against it as a string
+    # and the window does not follow the zone of the host that wrote the row.
+    def timestamp(at = Time.now)
+      at.utc.strftime(TIMESTAMP_FORMAT)
     end
 
     private
@@ -40,7 +48,7 @@ class MessageSchema
       return if columns(db).include?(:created_at)
 
       db.alter_table(:messages) { add_column :created_at, DateTime } # steep:ignore
-      db[:messages].where(created_at: nil).update(created_at: Sequel::CURRENT_TIMESTAMP)
+      db[:messages].where(created_at: nil).update(created_at: timestamp)
     end
 
     def add_channel_id(db)

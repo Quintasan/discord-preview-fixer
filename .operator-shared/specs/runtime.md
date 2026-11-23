@@ -31,8 +31,10 @@ allowed to post a second reply. Retained records still behave exactly as before,
 the reply when the original is deleted.
 
 `created_at` is set explicitly on insert because databases created before the column existed have no
-default. The schema owns the `channel_id` migration; `channel_id` is still written on insert but is
-no longer read by anything.
+default. Every row is written as fixed-shape UTC text, so the cutoff compares against it as a string
+and the retention window does not follow the zone of the host that wrote the row. A row left by an
+earlier version that wrote the host offset is pruned within that offset of the window. The schema owns
+the `channel_id` migration; `channel_id` is still written on insert but is no longer read by anything.
 
 ## Storage Scaling
 

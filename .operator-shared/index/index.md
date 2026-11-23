@@ -48,8 +48,8 @@ read_if: Navigating the codebase, locating a link service, or deciding where new
 - `handler_support.rb` — Shared handler behavior: mutex-guarded execution, bot filtering, embed suppression, and Sentry reporting for unexpected errors.
 - `reply_content.rb` — Fits fixed links into one message: keeps complete links up to 2000 characters, drops the rest, and truncates a single oversized link.
 - `handlers.rb` — Discord event dispatch: reply with fixed links, re-suppress embeds and re-sync the reply on edit, ignore bot authors, ignore duplicate records, persist the message pair with its channel, suppress embeds, recover when the fixed reply is gone, and clean up on message/fixed-reply deletion.
-- `message.rb` — Sequel/SQLite connection plus the `Message` model (`original_message_id`, `fixed_message_id`, `channel_id`, `created_at`); `Message.record` upserts with an explicit timestamp and `Message.prune` is one bulk delete past the cutoff.
-- `message_schema.rb` — Owns the `messages` table: creates it, backfills `created_at`, adds `channel_id`, and adds the `fixed_message_id` and `created_at` indexes for legacy databases.
+- `message.rb` — Sequel/SQLite connection plus the `Message` model (`original_message_id`, `fixed_message_id`, `channel_id`, `created_at`); `Message.record` upserts with an explicit UTC timestamp and `Message.prune` is one bulk delete past the cutoff.
+- `message_schema.rb` — Owns the `messages` table: creates it, owns the UTC `created_at` text format, backfills `created_at`, adds `channel_id`, and adds the `fixed_message_id` and `created_at` indexes for legacy databases.
 - `pruner.rb` — Retention policy: forgets records past the window; never touches Discord, so it needs no bot or gateway.
 - `health.rb` — `HealthServer`: loopback TCP endpoint answering `GET /healthz` with 200/503 and 404 for any other path or method, bounding request reads so a stalled client cannot block it; used by the container health check.
 - `sentry.rb` — Sentry initialization (breadcrumbs logger config).
