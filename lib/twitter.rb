@@ -8,8 +8,9 @@ class Twitter < Service
 
   # Only posts expand. Profiles, media tabs, hashtags, searches, and every
   # other path are left alone: vxtwitter has nothing useful to preview for
-  # them, and a rewritten profile link is just noise.
-  POST_PATH = %r{\A/(?:[^/]+|i/web)/status(?:es)?/\d+}
+  # them, and a rewritten profile link is just noise. The id must end at a path
+  # separator, so /status/1abc is not read as post 1.
+  POST_PATH = %r{\A/(?:[^/]+|i/web)/status(?:es)?/\d+(?=/|\z)}
 
   def self.fix_link(uri)
     # @type var path: String

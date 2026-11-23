@@ -55,7 +55,8 @@ class ServicesTest < Minitest::Test
     [Twitter, 'https://twitter.com/cutesexyrobutts/likes'],
     [Twitter, 'https://twitter.com/hashtag/art'],
     [Twitter, 'https://twitter.com/search?q=art'],
-    [Twitter, 'https://twitter.com/i/lists/1']
+    [Twitter, 'https://twitter.com/i/lists/1'],
+    [Twitter, 'https://twitter.com/user/status/1abc']
   ].freeze
 
   def test_rewrites_supported_urls
