@@ -9,9 +9,9 @@ read_if: Changing link detection, adding a Service subclass, spoiler/code handli
 
 Each supported service is a `Service` subclass with `HOST_REGEX` (matched against `URI#host`) and
 `REPLACEMENT_HOST`. Subclasses may override `rewrite` to adjust the path or query; the default
-rewrites only the host. `LinkFixer` extracts every `http`/`https` URL from a message, strips trailing
-punctuation, and rewrites the host of the first matching service. A URL matched by no service
-produces no output.
+rewrites the host, drops any userinfo, and clears the port, which belongs to the old host. `LinkFixer`
+extracts every `http`/`https` URL from a message, strips trailing punctuation, and rewrites the host
+of the first matching service. A URL matched by no service produces no output.
 
 Registering a service is exactly two steps:
 

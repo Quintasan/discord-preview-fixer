@@ -20,6 +20,14 @@ class ServiceTest < Minitest::Test
     assert_nil result
   end
 
+  def test_fix_link_drops_the_port_of_the_old_host
+    uri = URI.parse('http://x.com:8080/user/status/1')
+
+    result = Service.subclasses.lazy.filter_map { |k| k.fix_link(uri) }.first
+
+    assert_equal 'http://vxtwitter.com/user/status/1', result
+  end
+
   def test_subclasses_can_override_rewrite
     assert_equal 'https://override.example/path',
                  override_service.fix_link(URI.parse('https://override.invalid/path?tracking=1'))

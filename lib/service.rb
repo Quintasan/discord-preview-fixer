@@ -11,9 +11,11 @@ class Service
   end
 
   # Subclasses may override to adjust the path or query. The default rewrites
-  # the host and leaves the rest of the URL intact.
+  # the host and leaves the rest of the URL intact. The port goes with the host:
+  # it names a server of the old host, so the fixed link uses the scheme default.
   def self.rewrite(uri)
     uri.host = self::REPLACEMENT_HOST
+    uri.port = nil
     uri
   end
 end
