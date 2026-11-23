@@ -12,6 +12,7 @@ read_if: Navigating the codebase, locating a link service, or deciding where new
 - `HandlerSupport` serializes handler bodies, filters bots, suppresses embeds, and reports unexpected failures to Sentry (discordrb otherwise swallows handler exceptions into its own logger). `ReplyContent` fits links into Discord's 2000-character limit.
 - `message.rb` owns the SQLite/Sequel store mapping original Discord message IDs to posted fixed-reply IDs and their channel; `pruner.rb` only forgets stale records — retention never deletes replies, and edits past the window are ignored rather than re-fixed.
 - Tests are Minitest with SimpleCov (90% branch floor), run against an in-memory DB (`DB_PATH=:memory:` in `test/test_helper.rb`).
+- Types are RBS. `sig/` describes `lib/`, `Steepfile` picks the files and libraries to check, and `rake typecheck` runs `rbs validate` then `steep check`. `main.rb` and `test/` are outside the target, so they are not checked yet.
 
 ## Project Index
 
@@ -19,6 +20,7 @@ read_if: Navigating the codebase, locating a link service, or deciding where new
 - `README.md` — Ditto
 - `Gemfile`, `Gemfile.lock` — Ditto
 - `Rakefile` — Ditto
+- `Steepfile` — Ditto
 - `mise.toml` — Ditto
 - `lefthook.yml` — Ditto
 - `.rubocop.yml` — Ditto
@@ -28,7 +30,7 @@ read_if: Navigating the codebase, locating a link service, or deciding where new
 - `.editorconfig`, `.gitignore`, `.infisical.json` — Ditto
 - `.mcp.json` — Ditto
 - `coverage/` — Generated SimpleCov output; gitignored.
-- `.github/workflows/minitest.yml` — CI gate: tests then RuboCop, plus a no-push Docker build.
+- `.github/workflows/minitest.yml` — CI gate: tests, RuboCop, and `rake typecheck`, plus a no-push Docker build.
 - `.github/workflows/build-docker-image.yml` — Tag-triggered GHCR build; asserts the tag matches `compose.yml` before building.
 - `.github/dependabot.yml` — Weekly Bundler, GitHub Actions, and Docker updates.
 
@@ -52,6 +54,13 @@ read_if: Navigating the codebase, locating a link service, or deciding where new
 - `health.rb` — `HealthServer`: loopback TCP endpoint answering `GET /healthz` with 200/503 and 404 for any other path or method, bounding request reads so a stalled client cannot block it; used by the container health check.
 - `sentry.rb` — Sentry initialization (breadcrumbs logger config).
 - `twitter.rb`, `pixiv.rb`, `reddit.rb`, `amiami.rb`, `instagram.rb`, `tiktok.rb` — One `Service` subclass each, differing only in `HOST_REGEX` and `REPLACEMENT_HOST` (vxtwitter.com, phixiv.net, rxddit.com, figurki.harvestasha.org, eeinstagram.com, tnktok.com). Twitter also covers `x.com`/`mobile.`; Reddit covers `www.`/`old.`/`new.`/`np.`/`i.`; Instagram covers `m.`/`instagr.am`.
+
+### `sig/` — RBS signatures for `lib/`
+
+- `service.rbs`, `link_fixer.rbs`, `handlers.rbs`, … — One file per `lib/` class, mirroring its public and private methods (private helpers are declared under `private`).
+- `globals.rbs` — The top-level `DB` handle that `lib/message.rb` assigns.
+- `external.rbs` — Narrow stand-ins for the gems that ship no signatures (`discordrb` error classes, the Sequel model API, `sentry-ruby`), plus the `TCPServer.new` arity Steep drops. Anything outside these declarations stays untyped on purpose.
+- `interfaces.rbs` — Structural types for the outside objects the code calls, so real gateway objects and the `test/` fakes both fit.
 
 ### `test/` — Minitest suite
 
