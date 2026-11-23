@@ -436,6 +436,15 @@ class HandlersTest < Minitest::Test
     assert_equal({ parse: [], replied_user: false }, event.response_args.last[3])
   end
 
+  def test_reply_references_the_original_message
+    message = FakeMessage.new(content: 'https://twitter.com/a/status/1')
+    event = FakeMessageEvent.new(message:)
+
+    @handlers.on_message(event)
+
+    assert_same message, event.response_args.last[4]
+  end
+
   def test_resuppresses_embeds_when_an_edited_link_is_updated
     Message.create(original_message_id: 1000, fixed_message_id: 2000)
     message = FakeMessage.new(content: 'now https://pixiv.net/en/artworks/1')
