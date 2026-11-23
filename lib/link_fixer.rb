@@ -8,6 +8,8 @@ class LinkFixer
 
   TRAILING_PUNCTUATION = /[.,!?;:)\]}>"']+\z/
 
+  SPOILER = '||'
+
   def self.fix(message)
     new(message).fix
   end
@@ -58,7 +60,7 @@ class LinkFixer
   end
 
   def inside_spoiler?(offset)
-    @spoiler_spans ||= spans('||')
+    @spoiler_spans ||= spoiler_spans
     @spoiler_spans.any? { |span| span.cover?(offset) }
   end
 
@@ -67,16 +69,30 @@ class LinkFixer
     @code_spans.any? { |span| span.cover?(offset) }
   end
 
-  # Pairs delimiters left to right. An unmatched delimiter starts no span and
-  # is skipped, so a later pair is still recognized.
-  def spans(delimiter)
+  # Spoiler markers pair left to right, but a marker inside a code span is
+  # literal text: `||` in inline code hides nothing. An unmatched marker starts
+  # no span and is skipped, so a later pair is still recognized.
+  def spoiler_spans
     # @type var ranges: Array[Range[Integer]]
     ranges = []
     position = 0
-    while (open = @message.index(delimiter, position))
-      position = append_span(ranges, open, delimiter)
+    while (open = spoiler_marker(position))
+      # @type var close: Integer?
+      close = spoiler_marker(open + SPOILER.length)
+      position = close ? close + SPOILER.length : open + SPOILER.length
+      ranges << (open...position) if close
     end
     ranges
+  end
+
+  def spoiler_marker(from)
+    position = from
+    while (found = @message.index(SPOILER, position))
+      return found unless inside_code?(found)
+
+      position = found + SPOILER.length
+    end
+    nil
   end
 
   # Code spans pair runs of backticks, so inline code, multi-backtick code, and

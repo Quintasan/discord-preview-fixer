@@ -26,7 +26,8 @@ Dispatch walks `Service.subclasses`, so a new service must not match a host anot
 - URLs inside inline code, multi-backtick code, and fenced code blocks are not extracted.
 - Spoilers are paired left to right; a URL is spoilered when it starts inside a `||…||` span,
   including across newlines. A fixed URL that occurs both inside and outside a spoiler is spoilered,
-  so a spoilered link is never leaked. Unmatched delimiters create no span.
+  so a spoilered link is never leaked. Unmatched delimiters create no span, and a marker inside inline
+  code is literal text, so it neither opens nor closes one.
 - Trailing punctuation is stripped from each match.
 
 ## Reply Lifecycle

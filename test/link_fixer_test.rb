@@ -86,6 +86,18 @@ class LinkFixerTest < Minitest::Test
     assert_equal ['https://vxtwitter.com/a/status/1'], LinkFixer.fix(message)
   end
 
+  def test_ignores_spoiler_markers_inside_inline_code
+    message = '`||` https://twitter.com/a/status/1 `||`'
+
+    assert_equal ['https://vxtwitter.com/a/status/1'], LinkFixer.fix(message)
+  end
+
+  def test_wraps_a_link_between_real_markers_when_code_also_has_markers
+    message = '`||` || https://twitter.com/a/status/1 ||'
+
+    assert_equal ['|| https://vxtwitter.com/a/status/1 ||'], LinkFixer.fix(message)
+  end
+
   def test_skips_links_inside_inline_code
     assert_empty LinkFixer.fix('`https://twitter.com/a/status/1`')
   end

@@ -3,6 +3,8 @@ class LinkFixer
 
   TRAILING_PUNCTUATION: Regexp
 
+  SPOILER: String
+
   @message: String
 
   @spoiler_spans: Array[Range[Integer]]
@@ -27,7 +29,9 @@ class LinkFixer
 
   def inside_code?: (Integer offset) -> bool
 
-  def spans: (String delimiter) -> Array[Range[Integer]]
+  def spoiler_spans: () -> Array[Range[Integer]]
+
+  def spoiler_marker: (Integer from) -> Integer?
 
   def code_spans: () -> Array[Range[Integer]]
 
